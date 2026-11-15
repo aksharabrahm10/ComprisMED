@@ -1,0 +1,95 @@
+import json
+from collections import Counter
+from pathlib import Path
+
+from comprismed.facts import compare_facts
+from comprismed.metrics import detection_metrics
+
+BENCHMARK = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "synthetic"
+    / "benchmark.jsonl"
+)
+
+
+def load_rows() -> list[dict[str, object]]:
+    return [
+        json.loads(line)
+        for line in BENCHMARK.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def test_benchmark_has_frozen_family_disjoint_splits() -> None:
+    rows = load_rows()
+    split_counts = Counter(row["split"] for row in rows)
+    assert len(rows) == 60
+    assert split_counts == {"train": 20, "validation": 10, "test": 30}
+    families_by_split = {
+        split: {
+            row["scenario_family"]
+            for row in rows
+            if row["split"] == split
+        }
+        for split in ("train", "validation", "test")
+    }
+    assert families_by_split["train"].isdisjoint(families_by_split["validation"])
+    assert families_by_split["train"].isdisjoint(families_by_split["test"])
+    assert families_by_split["validation"].isdisjoint(families_by_split["test"])
+    assert all(row["synthetic"] is True for row in rows)
+    assert all(row["id"] for row in rows)
+    assert {row["complexity"] for row in rows} == {"simple", "moderate", "complex"}
+
+
+def test_expected_extractions_and_clean_outputs_match_annotations() -> None:
+    for row in load_rows():
+        source = row["source"]
+        expected = row["expected_extraction"]
+        assert expected == row["required_facts"]
+        assert all(
+            check.status == "preserved"
+            for check in compare_facts(source, source, expected)
+        )
+        assert row["expected_clean_outcome"] == "preserved"
+        assert all(
+            check["status"] == "preserved"
+            for check in row["expected_clean_checks"]
+        )
+        assert row["context_verification_scope"] == (
+            "not_checked_by_current_deterministic_verifier"
+        )
+
+
+def test_all_controlled_mutations_match_expected_verifier_outcomes() -> None:
+    expected: list[bool] = []
+    detected: list[bool] = []
+    mutation_categories: Counter[str] = Counter()
+    for row in load_rows():
+        source = row["source"]
+        expected.append(False)
+        clean = compare_facts(source, source, row["required_facts"])
+        detected.append(any(check.status != "preserved" for check in clean))
+        for mutation in row["mutations"]:
+            mutation_categories[mutation["category"]] += 1
+            checks = compare_facts(
+                source,
+                mutation["output"],
+                {mutation["category"]: [mutation["required_fact"]]},
+            )
+            actual_status = checks[0].status
+            expected.append(True)
+            detected.append(actual_status != "preserved")
+            assert mutation["expected_status"] == "flag"
+            assert actual_status != "preserved"
+            assert mutation["expected_verifier_outcome"] == "flag"
+            assert mutation["label"] == "deliberately_altered"
+    assert mutation_categories["number_or_dose"] > 0
+    assert mutation_categories["frequency"] > 0
+    assert mutation_categories["duration"] > 0
+    assert mutation_categories["date"] > 0
+    assert mutation_categories["negation"] > 0
+    metrics = detection_metrics(expected, detected)
+    assert metrics["true_positives"] == 60
+    assert metrics["false_negatives"] == 0
+    assert metrics["false_alarms"] == 0

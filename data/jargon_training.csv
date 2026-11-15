@@ -1,0 +1,41 @@
+text,label
+"The patient has hypertension.",jargon
+"The patient has high blood pressure.",plain
+"Please administer the medication orally.",jargon
+"Please give the medicine by mouth.",plain
+"Discontinue use if a rash develops.",jargon
+"Stop taking it if you get a rash.",plain
+"Monitor for edema in the lower legs.",jargon
+"Watch for swelling in the lower legs.",plain
+"Take this medication twice daily.",plain
+"Take this medication two times each day.",plain
+"The dosage is listed on the prescription.",jargon
+"The amount to take is on the medicine label.",plain
+"Report any adverse effects to your provider.",jargon
+"Tell your care team about unwanted effects.",plain
+"Apply the topical medication to the affected area.",jargon
+"Put the medicine on the affected area of skin.",plain
+"The medicine is contraindicated during pregnancy.",jargon
+"Do not use this medicine during pregnancy.",plain
+"Follow up with your clinician in one week.",plain
+"See your health professional again in one week.",plain
+"Take one tablet as needed for pain.",plain
+"Take one pill when you need it for pain.",plain
+"The patient reports insomnia.",jargon
+"The patient says they have trouble sleeping.",plain
+"The medication is available over the counter.",jargon
+"You can buy this medicine without a prescription.",plain
+"Observe for signs of inflammation.",jargon
+"Look for swelling and irritation.",plain
+"The prescription indicates intravenous administration.",jargon
+"The prescription says the medicine goes into a vein.",plain
+"The underlying condition may cause symptoms.",jargon
+"The health problem already present may cause changes you notice.",plain
+"Take the medication at bedtime.",plain
+"Take the medicine before going to sleep.",plain
+"The patient has hypotension.",jargon
+"The patient has low blood pressure.",plain
+"Use the prescribed dosage.",jargon
+"Use the amount listed on your medicine label.",plain
+"Contact the clinic if symptoms worsen.",plain
+"Call the clinic if the problems you notice get worse.",plain
