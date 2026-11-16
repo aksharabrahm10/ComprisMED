@@ -41,3 +41,12 @@ def test_equivalent_daily_frequency_phrasing_is_preserved() -> None:
     )
     assert len(checks) == 1
     assert checks[0].status == "preserved"
+
+
+def test_explicitly_empty_gold_facts_do_not_fall_back_to_parser() -> None:
+    checks = compare_facts(
+        "Take 5 mg twice daily.",
+        "Take the dose.",
+        {},
+    )
+    assert checks == []

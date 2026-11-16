@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+import os
 import re
+import tempfile
+from pathlib import Path
 
 import gradio as gr
 
-from comprismed.facts import compare_facts
 from comprismed.groq import translate_with_groq
-from comprismed.jargon import detect_jargon
+from comprismed.ocr import (
+    ImageInputError,
+    extract_instruction_text,
+    prepare_image_upload,
+)
 from comprismed.pipeline import simplify
 
 
@@ -19,142 +25,341 @@ EXAMPLE = (
 
 CSS = """
 :root { color-scheme: light; }
+html, body, #root, .gradio-container, .gradio-container * {
+    font-family: Inter, "Segoe UI", Arial, sans-serif !important;
+}
 html, body, #root, .gradio-container {
     width: 100% !important;
     max-width: none !important;
     min-height: 100% !important;
     margin: 0 !important;
-    background: #f5f7fa !important;
-    color: #172033 !important;
-    font-family: Inter, "Segoe UI", Arial, sans-serif !important;
+    background: #f7f5ef !important;
+    color: #1d3440 !important;
 }
 .gradio-container {
     min-height: 100vh !important;
     box-sizing: border-box !important;
-    padding: 18px clamp(16px, 3vw, 48px) 32px !important;
+    padding: clamp(18px, 4vw, 52px) clamp(16px, 6vw, 88px) 48px !important;
 }
-.gradio-container, .gradio-container * {
-    font-family: Inter, "Segoe UI", Arial, sans-serif !important;
+.cm-shell {
+    width: 100% !important;
+    max-width: 1440px !important;
+    margin: 0 auto !important;
+    gap: clamp(18px, 3vw, 30px) !important;
 }
-.cm-shell { width: 100% !important; max-width: none !important; gap: 16px !important; }
-.cm-header { padding: 0 0 4px !important; gap: 4px !important; }
-.cm-header h1 { color: #111827 !important; font-size: clamp(1.7rem, 3vw, 2.25rem) !important; }
-.cm-header p { color: #475569 !important; font-size: 1rem !important; }
-.cm-safety, .cm-safety * { color: #26364f !important; }
+.cm-header {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 0 2px !important;
+}
+.cm-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.cm-brand-mark {
+    display: flex;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: #dcebe6;
+}
+.cm-brand h1 {
+    margin: 0;
+    color: #1d3440;
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    font-weight: 700;
+    letter-spacing: -.055em;
+    line-height: 1.1;
+}
 .cm-safety {
-    background: #eaf1ff !important;
-    border-left: 4px solid #2563eb !important;
-    border-radius: 6px !important;
-    padding: 10px 14px !important;
-    line-height: 1.5 !important;
+    color: #344c53 !important;
+    background: #e9eee8 !important;
+    border: 1px solid #d5e0d9 !important;
+    border-radius: 12px !important;
+    padding: 13px 17px !important;
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
 }
-.block.cm-safety {
-    background: transparent !important;
-    border-left: 0 !important;
-    padding: 0 !important;
-}
+.cm-safety, .cm-safety * { color: #344c53 !important; }
 .cm-workspace {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     align-items: stretch !important;
-    gap: 16px !important;
+    gap: clamp(16px, 2vw, 24px) !important;
     width: 100% !important;
 }
 .cm-panel {
     min-width: 0 !important;
-    background: #fff !important;
-    border: 1px solid #d5dce7 !important;
-    border-radius: 14px !important;
-    padding: clamp(14px, 2vw, 26px) !important;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, .04) !important;
+    background: #fffefa !important;
+    border: 1px solid #e6e2d8 !important;
+    border-radius: 20px !important;
+    padding: clamp(20px, 3vw, 34px) !important;
+    box-shadow: 0 8px 26px rgba(29, 52, 64, .045) !important;
 }
-.cm-panel .block, .cm-panel .form, .cm-panel .container,
-.cm-compare .block, .cm-compare .form {
+.cm-panel .block, .cm-panel .form, .cm-panel .container {
     background: transparent !important;
 }
 .cm-panel h2, .cm-panel h3, .cm-panel p, .cm-panel label,
-.cm-panel .prose, .cm-panel .prose *, .cm-panel .markdown,
-.cm-compare h2, .cm-compare h3, .cm-compare p, .cm-compare label,
-.cm-compare .prose, .cm-compare .prose * {
-    color: #172033 !important;
+.cm-panel .prose, .cm-panel .prose *, .cm-panel .markdown {
+    color: #1d3440 !important;
 }
-.cm-panel h2, .cm-panel h3 { margin: 0 0 6px !important; }
-.cm-helper { color: #526178 !important; font-size: .94rem !important; line-height: 1.5 !important; }
+.cm-panel h2, .cm-panel h3 {
+    margin: 0 0 16px !important;
+    font-size: 1.35rem !important;
+    font-weight: 650 !important;
+    letter-spacing: -.02em !important;
+}
 .cm-panel textarea {
-    min-height: 42vh !important;
+    min-height: 34vh !important;
     resize: vertical !important;
-    background: #fff !important;
-    color: #111827 !important;
-    border: 1px solid #b8c2d1 !important;
-    border-radius: 10px !important;
-    font-size: 1.05rem !important;
-    line-height: 1.65 !important;
-}
-.cm-panel textarea::placeholder { color: #64748b !important; opacity: 1 !important; }
-.cm-panel input {
-    background: #fff !important;
-    color: #172033 !important;
-}
-.cm-panel div.wrap:has(input) {
-    background: #fff !important;
-    border: 1px solid #b8c2d1 !important;
-}
-.cm-output textarea {
-    min-height: 29vh !important;
-    background: #f8faff !important;
-    color: #111827 !important;
-    border-color: #b7c8e8 !important;
+    background: #fffefa !important;
+    color: #1d3440 !important;
+    border: 1px solid #d8d8cf !important;
+    border-radius: 12px !important;
     font-size: 1.08rem !important;
-    line-height: 1.8 !important;
+    line-height: 1.75 !important;
+    padding: 16px !important;
 }
-.cm-translation textarea {
+.cm-panel textarea::placeholder { color: #687a79 !important; opacity: 1 !important; }
+.cm-output textarea,
+.cm-output textarea:disabled {
+    min-height: 25vh !important;
+    background: #1d3440 !important;
+    color: #fffefa !important;
+    -webkit-text-fill-color: #fffefa !important;
+    opacity: 1 !important;
+    border: 1.5px solid #477a73 !important;
+    line-height: 1.9 !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 254, 250, .06) !important;
+}
+.cm-translation textarea,
+.cm-translation textarea:disabled {
     min-height: 12vh !important;
-    background: #fff !important;
-    color: #111827 !important;
-    border-color: #b8c2d1 !important;
+    background: #1d3440 !important;
+    color: #fffefa !important;
+    -webkit-text-fill-color: #fffefa !important;
+    opacity: 1 !important;
+    border: 1.5px solid #477a73 !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+}
+.cm-output textarea::placeholder,
+.cm-translation textarea::placeholder {
+    color: #cfddd8 !important;
+    -webkit-text-fill-color: #cfddd8 !important;
+    opacity: 1 !important;
+}
+.cm-panel label, .cm-panel .wrap label {
+    color: #344c53 !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+}
+.cm-panel input, .cm-panel [role="combobox"] {
+    min-height: 52px !important;
+    background: #fffefa !important;
+    color: #1d3440 !important;
+    border: 1px solid #d8d8cf !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
 }
 .cm-checks {
-    background: #f8faff !important;
-    border: 1px solid #d7e2f5 !important;
+    margin-top: 16px !important;
+    background: #f7f5ef !important;
+    border: 1px solid #e6e2d8 !important;
+    border-radius: 12px !important;
+    padding: 14px 17px !important;
+}
+.cm-checks, .cm-checks * {
+    color: #344c53 !important;
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+}
+.cm-checks:has(.md:empty) { display: none !important; }
+.cm-checks p { margin: 0 !important; }
+.cm-checks:has(p:only-child) {
+    background: transparent !important;
+    border-color: transparent !important;
+    padding: 4px 0 !important;
+}
+.cm-description {
+    margin-top: 6px !important;
+    color: #536a68 !important;
+    font-size: .94rem !important;
+    line-height: 1.6 !important;
+    text-align: center !important;
+}
+.cm-description, .cm-description * { color: #536a68 !important; }
+.cm-input-actions { gap: 12px !important; }
+.cm-upload-title {
+    margin: 20px 0 10px !important;
+    color: #344c53 !important;
+    font-size: 1rem !important;
+    font-weight: 650 !important;
+}
+.cm-upload-row { align-items: stretch !important; gap: 14px !important; }
+.cm-photo-upload, .cm-photo-preview {
+    min-width: 0 !important;
+    border: 1px solid #d8d8cf !important;
+    border-radius: 12px !important;
+    background: #f7f5ef !important;
+    color: #1d3440 !important;
+}
+.cm-photo-upload label, .cm-photo-upload .file-preview,
+.cm-photo-upload .file-preview * {
+    color: #1d3440 !important;
+}
+.cm-photo-upload button,
+.cm-photo-upload button * {
+    color: #1d3440 !important;
+}
+.cm-photo-upload .or {
+    color: #536a68 !important;
+}
+.cm-photo-preview {
+    display: flex !important;
+    min-height: 120px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+.cm-photo-preview:not(:has(img)) {
+    display: none !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+.cm-photo-preview img {
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 230px !important;
+    object-fit: contain !important;
+    border-radius: 8px !important;
+}
+.cm-photo-status {
+    margin: 8px 0 !important;
+    color: #344c53 !important;
+    font-size: .96rem !important;
+    line-height: 1.55 !important;
+}
+.cm-photo-confirm {
+    margin: 6px 0 12px !important;
+    padding: 10px 12px !important;
     border-radius: 10px !important;
-    padding: 10px 14px !important;
+    background: #e9eee8 !important;
 }
-.cm-checks, .cm-checks * { color: #172033 !important; }
-.cm-actions { align-items: center !important; gap: 10px !important; }
-button { min-height: 46px !important; }
+.cm-photo-confirm, .cm-photo-confirm * { color: #1d3440 !important; }
+.cm-language-select {
+    margin-top: 20px !important;
+}
+.cm-language-select [role="combobox"] {
+    min-height: 54px !important;
+    background: #fffefa !important;
+    color: #1d3440 !important;
+    border: 1px solid #aebeb6 !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
+}
+.cm-language-select .container,
+.cm-language-select .wrap,
+.cm-language-select .wrap-inner,
+.cm-language-select .secondary-wrap {
+    background: transparent !important;
+}
+.cm-language-select input[role="listbox"] {
+    min-height: 54px !important;
+    background: #fffefa !important;
+    color: #1d3440 !important;
+    -webkit-text-fill-color: #1d3440 !important;
+    border: 1px solid #aebeb6 !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
+    padding: 12px 44px 12px 16px !important;
+}
+.cm-language-select .icon-wrap {
+    display: flex !important;
+    width: 40px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+}
+.cm-language-select .icon-wrap svg { display: none !important; }
+.cm-language-select .icon-wrap::after {
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-right: 2px solid #1d3440;
+    border-bottom: 2px solid #1d3440;
+    content: "";
+    transform: rotate(45deg);
+}
+.cm-language-select [data-testid="block-info"] {
+    display: block !important;
+    padding: 0 0 7px !important;
+    background: transparent !important;
+    color: #344c53 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+}
+.cm-language-select [role="option"] {
+    color: #1d3440 !important;
+    font-size: 1rem !important;
+}
+#dropdown-options,
+#dropdown-options *,
+ul.options[role="listbox"],
+ul.options[role="listbox"] * {
+    color: #1d3440 !important;
+}
+ul.options[role="listbox"] {
+    background: #fffefa !important;
+    border: 1px solid #d8d8cf !important;
+}
+ul.options[role="listbox"] [role="option"] {
+    background: #fffefa !important;
+}
+ul.options[role="listbox"] [role="option"][aria-selected="true"],
+ul.options[role="listbox"] [role="option"]:hover {
+    background: #e9eee8 !important;
+}
+button {
+    min-height: 54px !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
+    font-weight: 650 !important;
+}
 button.primary {
-    background: #2457c5 !important;
-    color: #fff !important;
-    border: 1px solid #2457c5 !important;
+    background: #477a73 !important;
+    color: #fffefa !important;
+    border: 1px solid #477a73 !important;
 }
-button.primary:hover { background: #1947a8 !important; }
+button.primary:hover { background: #37665f !important; }
 button.secondary, button:not(.primary):not(.label-wrap) {
-    background: #fff !important;
-    color: #172033 !important;
-    border: 1px solid #b8c2d1 !important;
+    background: #fffefa !important;
+    color: #28444a !important;
+    border: 1px solid #ccd7d0 !important;
 }
-button.secondary:hover, button:not(.primary):not(.label-wrap):hover {
-    background: #eef4ff !important;
+button.secondary:hover, button:not(.primary):not(.label-wrap):hover { background: #edf3ee !important; }
+button:focus-visible, textarea:focus-visible, input:focus-visible {
+    outline: 3px solid #79a69d !important;
+    outline-offset: 2px !important;
 }
-button.label-wrap, button.label-wrap * {
-    background: #fff !important;
-    color: #172033 !important;
-}
-.cm-compare {
-    width: 100% !important;
-    background: #fff !important;
-    border: 1px solid #d5dce7 !important;
-    border-radius: 14px !important;
-    padding: 12px 18px !important;
-}
-.cm-compare textarea { color: #111827 !important; background: #f8faff !important; }
-.cm-safety blockquote { border-left: 0 !important; padding-left: 0 !important; }
 footer, .built-with-gradio { display: none !important; }
 @media (max-width: 760px) {
-    .gradio-container { padding: 12px !important; }
+    .gradio-container { padding: 20px 14px 32px !important; }
     .cm-workspace { grid-template-columns: minmax(0, 1fr) !important; }
-    .cm-panel textarea { min-height: 26vh !important; }
-    .cm-output textarea { min-height: 24vh !important; }
+    .cm-panel { padding: 20px !important; }
+    .cm-panel textarea { min-height: 25vh !important; }
+    .cm-output textarea { min-height: 22vh !important; }
+    .cm-brand-mark { width: 46px; height: 46px; flex-basis: 46px; }
+    .cm-language-select { margin-top: 14px !important; }
 }
 """
 
@@ -191,9 +396,12 @@ def _format_notes(text: str) -> str:
 
 
 def _format_checks(checks: list[object]) -> str:
+    issues = [check for check in checks if getattr(check, "status", "") != "preserved"]
     if not checks:
-        return "No supported numbers, dates, frequencies, durations, or do-not details were found to compare."
-    labels = {"preserved": "Preserved", "omitted": "Not found", "altered": "Changed"}
+        return "No specific details were available to check."
+    if not issues:
+        return "No changes were detected in the important details we checked."
+    labels = {"omitted": "Missing", "altered": "Changed"}
     categories = {
         "number_or_dose": "Dose or amount",
         "number": "Dose or amount",
@@ -203,71 +411,47 @@ def _format_checks(checks: list[object]) -> str:
         "negation": "Do-not wording",
     }
     rows = []
-    for check in checks:
+    for check in issues:
         status = getattr(check, "status", "")
         category = categories.get(
             str(getattr(check, "category", "")),
             str(getattr(check, "category", "")).replace("_", " ").title(),
         )
         fact = str(getattr(check, "source_fact", ""))
-        marker = "✓" if status == "preserved" else "!"
-        rows.append(f"- {marker} **{labels.get(status, 'Review')}** · {category}: {fact}")
+        matched_fact = getattr(check, "matched_fact", None)
+        detail = f" — output says “{matched_fact}”" if matched_fact else ""
+        rows.append(
+            f"- **{labels.get(status, 'Review')}** · {category}: {fact}{detail}"
+        )
     return "\n".join(rows)
 
 
-def run_demo(text: str) -> tuple[str, str, str, str, str, dict[str, object]]:
+def run_demo(
+    text: str,
+    extracted_text_needs_review: bool = False,
+    extracted_text_confirmed: bool = False,
+    confirmed_ocr_text: str | None = None,
+) -> tuple[str, str, dict[str, object]]:
     if not text or not text.strip():
         raise gr.Error("Enter the instructions first.")
+    if extracted_text_needs_review and (
+        not extracted_text_confirmed or confirmed_ocr_text != text
+    ):
+        raise gr.Error(
+            "Please check the extracted text against the photo and confirm it "
+            "before simplifying."
+        )
+
     try:
-        baseline_result = simplify(text, mode="baseline", use_api=True)
         verified_result = simplify(text, mode="verified", use_api=True)
-        jargon = detect_jargon(text)
     except RuntimeError as exc:
         raise gr.Error(str(exc)) from exc
     except ValueError as exc:
         raise gr.Error(str(exc)) from exc
 
-    baseline = _format_notes(str(baseline_result["output"]))
     verified = _format_notes(str(verified_result["output"]))
-    source_facts = verified_result["source_facts"]
-    baseline_checks = compare_facts(text, str(baseline_result["output"]), source_facts)
-    verified_checks = verified_result["checks"]
-    needs_review = bool(verified_result["review_required"])
-
-    if needs_review:
-        check_summary = (
-            "### Please compare these details with the original\n"
-            "Some supported details may be missing or changed. Contact your care team "
-            "if anything is unclear.\n\n"
-            f"{_format_checks(verified_checks)}"
-        )
-    elif verified_checks:
-        check_summary = (
-            "### Checked details\n"
-            "No changes found in the details listed below. This does not confirm the "
-            "explanation is medically correct.\n\n"
-            f"{_format_checks(verified_checks)}"
-        )
-    else:
-        check_summary = (
-            "### Nothing was available to check\n"
-            "The checker found no supported numbers, dates, schedules, durations, or "
-            "do-not details. This does not confirm the explanation is correct."
-        )
-    jargon_matches = jargon["term_matches"]
-    jargon_summary = (
-        "\n".join(f"- **{term}**: {definition}" for term, definition in jargon_matches)
-        if jargon_matches
-        else "No glossary matches were found."
-    )
-    return (
-        verified,
-        check_summary,
-        baseline,
-        _format_checks(baseline_checks),
-        jargon_summary,
-        gr.update(interactive=True),
-    )
+    check_summary = _format_checks(verified_result["checks"])
+    return verified, check_summary, gr.update(interactive=True)
 
 
 def translate_result(text: str, language: str) -> str:
@@ -281,132 +465,417 @@ def translate_result(text: str, language: str) -> str:
         raise gr.Error(str(exc)) from exc
 
 
+def _delete_temporary_upload(upload_path: str) -> None:
+    """Delete only files Gradio placed in its temporary upload directory."""
+    root = Path(
+        os.environ.get("GRADIO_TEMP_DIR")
+        or Path(tempfile.gettempdir()) / "gradio"
+    ).resolve()
+    path = Path(upload_path).resolve()
+    try:
+        if os.path.commonpath((str(root), str(path))) != str(root):
+            raise RuntimeError(
+                "The uploaded file was outside the temporary upload folder. "
+                "For privacy, it was not processed."
+            )
+    except ValueError as exc:
+        raise RuntimeError(
+            "The uploaded file was outside the temporary upload folder. "
+            "For privacy, it was not processed."
+        ) from exc
+    try:
+        path.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RuntimeError(
+            "The temporary image could not be cleared. Please restart the app "
+            "before uploading another document."
+        ) from exc
+
+
+def _preview_markup(data_uri: str) -> str:
+    if not data_uri:
+        return ""
+    return (
+        '<img src="'
+        + data_uri
+        + '" alt="Preview of the fictional instruction photo">'
+    )
+
+
+def prepare_photo_upload(upload_path):
+    if not upload_path:
+        return (
+            "",
+            "Choose a JPG, JPEG, or PNG photo first.",
+            None,
+            gr.update(value=None),
+            "",
+            False,
+            gr.update(value=False, visible=False),
+            None,
+            "",
+            "",
+            "",
+            gr.update(interactive=False),
+            gr.update(interactive=False),
+        )
+    try:
+        prepared = prepare_image_upload(upload_path)
+        return (
+            _preview_markup(prepared.preview_data_uri),
+            "Photo preview ready. It stays on this device. Select “Extract text” "
+            "to read it locally.",
+            prepared.image_bytes,
+            gr.update(value=None),
+            "",
+            False,
+            gr.update(value=False, visible=False),
+            None,
+            "",
+            "",
+            "",
+            gr.update(interactive=False),
+            gr.update(interactive=False),
+        )
+    except ImageInputError as exc:
+        return (
+            "",
+            str(exc),
+            None,
+            gr.update(value=None),
+            "",
+            False,
+            gr.update(value=False, visible=False),
+            None,
+            "",
+            "",
+            "",
+            gr.update(interactive=False),
+            gr.update(interactive=False),
+        )
+    finally:
+        _delete_temporary_upload(upload_path)
+
+
+def extract_photo_text(image_bytes):
+    if not image_bytes:
+        return (
+            "",
+            "Upload a photo before extracting text.",
+            False,
+            gr.update(value=False, visible=False),
+            None,
+            gr.update(interactive=True),
+        )
+    try:
+        text = extract_instruction_text(image_bytes)
+    except (ImageInputError, RuntimeError) as exc:
+        return (
+            "",
+            str(exc),
+            False,
+            gr.update(value=False, visible=False),
+            None,
+            gr.update(interactive=True),
+        )
+    return (
+        text,
+        "Text extracted on this device. Compare every line with the photo and "
+        "correct anything that looks wrong.",
+        True,
+        gr.update(value=False, visible=True),
+        None,
+        gr.update(interactive=False),
+    )
+
+
+def begin_photo_extraction() -> tuple[
+    str, str, str, str, dict[str, object], dict[str, object]
+]:
+    return (
+        "Reading text on this device…",
+        "",
+        "",
+        "",
+        gr.update(interactive=False),
+        gr.update(interactive=False),
+    )
+
+
+def reset_ocr_confirmation(extracted_text_needs_review):
+    confirmation = (
+        gr.update(value=False) if extracted_text_needs_review else gr.update()
+    )
+    return (
+        confirmation,
+        "",
+        "",
+        "",
+        gr.update(interactive=False),
+        None,
+        gr.update(interactive=not bool(extracted_text_needs_review)),
+    )
+
+
+def record_ocr_confirmation(
+    text: str, confirmed: bool
+) -> tuple[str | None, dict[str, object]]:
+    return text if confirmed else None, gr.update(interactive=confirmed)
+
+
+def load_example():
+    return (
+        EXAMPLE,
+        None,
+        False,
+        gr.update(value=False, visible=False),
+        "",
+        "",
+        None,
+        "",
+        "",
+        "",
+        gr.update(interactive=False),
+        gr.update(interactive=True),
+    )
+
+
+def _bypass_proxy_for_localhost() -> None:
+    for key in ("NO_PROXY", "no_proxy"):
+        entries = [
+            item.strip()
+            for item in os.environ.get(key, "").split(",")
+            if item.strip()
+        ]
+        normalized = {item.casefold() for item in entries}
+        for host in ("localhost", "127.0.0.1"):
+            if host not in normalized:
+                entries.append(host)
+        os.environ[key] = ",".join(entries)
+
+
 with gr.Blocks(
-    title="comprisMED",
+    title="ComprisMED",
     theme=gr.themes.Soft(
-        primary_hue="blue",
-        secondary_hue="blue",
+        primary_hue="teal",
+        secondary_hue="teal",
         neutral_hue="slate",
         font=[gr.themes.GoogleFont("Inter"), "Segoe UI", "Arial", "sans-serif"],
     ),
     css=CSS,
     analytics_enabled=False,
+    delete_cache=(60, 60),
 ) as demo:
     with gr.Column(elem_classes=["cm-shell"]):
         with gr.Column(elem_classes=["cm-header"]):
-            gr.Markdown("# comprisMED")
-            gr.Markdown(
-                "Make medical instructions easier to read, then check selected details."
+            gr.HTML(
+                """
+                <div class="cm-brand" aria-label="ComprisMED">
+                  <span class="cm-brand-mark" aria-hidden="true">
+                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 5.5h13l5 5v12A3.5 3.5 0 0 1 21.5 26h-11A3.5 3.5 0 0 1 7 22.5v-17Z"
+                            stroke="#315B5A" stroke-width="1.8" stroke-linejoin="round"/>
+                      <path d="M19.5 5.8v5h5M11 16h10M11 20h7"
+                            stroke="#315B5A" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round"/>
+                      <path d="M24.2 23.8 28 27" stroke="#477A73" stroke-width="1.8"
+                            stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <h1>ComprisMED</h1>
+                </div>
+                """
             )
             gr.Markdown(
-                "**Safety note:** This project is a prototype and is not medical advice. "
-                "Use fictional text only; do not enter personal health information.",
+                "**Safety note:** Prototype only—not medical advice. Type or upload "
+                "fictional documents only; never use real patient information.",
                 elem_classes=["cm-safety"],
             )
 
         with gr.Row(elem_classes=["cm-workspace"]):
             with gr.Column(elem_classes=["cm-panel"]):
-                gr.Markdown("### Original instructions")
-                gr.Markdown(
-                    "Paste or type the text you want explained.",
-                    elem_classes=["cm-helper"],
-                )
+                gr.Markdown("### Your instructions")
                 instructions = gr.Textbox(
                     label="",
-                    placeholder="Enter fictional instructions here...",
-                    lines=12,
+                    placeholder="Paste medical instructions here",
+                    lines=9,
                     max_lines=24,
                     show_label=False,
                 )
-                with gr.Row(elem_classes=["cm-actions"]):
-                    example_button = gr.Button("Use example", size="sm")
+                gr.Markdown("Or upload a photo instead", elem_classes=["cm-upload-title"])
+                with gr.Row(elem_classes=["cm-upload-row"]):
+                    with gr.Column(scale=1, min_width=220):
+                        photo_upload = gr.File(
+                            label="Upload a photo (JPG, JPEG, or PNG)",
+                            file_types=[".jpg", ".jpeg", ".png"],
+                            file_count="single",
+                            type="filepath",
+                            elem_classes=["cm-photo-upload"],
+                        )
+                        extract_button = gr.Button(
+                            "Extract text",
+                            variant="secondary",
+                            size="lg",
+                        )
+                        photo_preview = gr.HTML(
+                            "",
+                            elem_classes=["cm-photo-preview"],
+                        )
+                ocr_status = gr.Markdown("", elem_classes=["cm-photo-status"])
+                ocr_image = gr.State(None)
+                ocr_requires_review = gr.State(False)
+                confirmed_ocr_text = gr.State(None)
+                ocr_confirmation = gr.Checkbox(
+                    label="I checked the extracted text against the photo",
+                    value=False,
+                    visible=False,
+                    elem_classes=["cm-photo-confirm"],
+                )
+                example_button = gr.Button(
+                    "Use sample instructions", variant="secondary", size="sm"
+                )
+                with gr.Row(elem_classes=["cm-input-actions"]):
                     simplify_button = gr.Button(
-                        "Simplify instructions", variant="primary", size="lg"
+                        "Simplify", variant="primary", size="lg"
                     )
 
             with gr.Column(elem_classes=["cm-panel"]):
-                gr.Markdown("### Simple version")
-                gr.Markdown(
-                    "The AI turns the instructions into short, easy-to-read steps.",
-                    elem_classes=["cm-helper"],
-                )
+                gr.Markdown("### Simplified instructions")
                 simplified_output = gr.Textbox(
                     label="",
-                    placeholder="Your simplified steps will appear here.",
-                    lines=8,
+                    placeholder="Your simplified steps will appear here",
+                    lines=7,
                     max_lines=18,
                     interactive=False,
                     show_label=False,
                     elem_classes=["cm-output"],
                 )
                 checks_output = gr.Markdown(
-                    "Important detail checks will appear here.",
+                    "",
                     elem_classes=["cm-checks"],
                 )
-
-                gr.Markdown("### Translate")
-                with gr.Row(elem_classes=["cm-actions"]):
-                    language = gr.Dropdown(
-                        choices=[
-                            "Arabic", "Chinese (Simplified)", "French", "German",
-                            "Hindi", "Italian", "Korean", "Portuguese", "Russian",
-                            "Spanish", "Tagalog", "Vietnamese",
-                        ],
-                        value="Spanish",
-                        label="Language",
-                        scale=2,
-                    )
-                    translate_button = gr.Button(
-                        "Translate", scale=1, interactive=False
-                    )
+                language = gr.Dropdown(
+                    choices=[
+                        "Arabic", "Chinese (Simplified)", "French", "German",
+                        "Hindi", "Italian", "Korean", "Portuguese", "Russian",
+                        "Spanish", "Tagalog", "Vietnamese",
+                    ],
+                    value="Spanish",
+                    label="Translate result to",
+                    elem_classes=["cm-language-select"],
+                    allow_custom_value=False,
+                )
+                translate_button = gr.Button(
+                    "Translate", variant="secondary", interactive=False
+                )
                 translation_output = gr.Textbox(
-                    label="Translation",
-                    placeholder="Your translation will appear here.",
-                    lines=4,
+                    label="",
+                    placeholder="Translation will appear here",
+                    lines=3,
                     max_lines=10,
                     interactive=False,
+                    show_label=False,
                     elem_classes=["cm-translation"],
                 )
-                gr.Markdown(
-                    "AI translations are not independently checked.",
-                    elem_classes=["cm-helper"],
-                )
 
-        with gr.Accordion(
-            "Compare AI-only and AI + detail check", open=False,
-            elem_classes=["cm-compare"],
-        ):
-            gr.Markdown(
-                "Both versions are AI-generated. The checked version may be revised "
-                "if a selected detail does not match."
-            )
-            with gr.Row():
-                with gr.Column():
-                    gr.Markdown("#### AI-only version")
-                    baseline_output = gr.Textbox(
-                        label="",
-                        lines=5,
-                        interactive=False,
-                        show_label=False,
-                    )
-                    baseline_checks_output = gr.Markdown()
-        with gr.Accordion(
-            "Possible medical terms", open=False, elem_classes=["cm-compare"]
-        ):
-            jargon_output = gr.Markdown("Term explanations will appear here.")
+        gr.Markdown(
+            "ComprisMED uses AI to simplify medical instructions and machine-learning "
+            "to check selected details against the original.",
+            elem_classes=["cm-description"],
+        )
 
-    example_button.click(lambda: EXAMPLE, outputs=instructions)
-    simplify_button.click(
-        run_demo,
-        inputs=instructions,
+    photo_upload.upload(
+        prepare_photo_upload,
+        inputs=photo_upload,
         outputs=[
+            photo_preview,
+            ocr_status,
+            ocr_image,
+            photo_upload,
+            instructions,
+            ocr_requires_review,
+            ocr_confirmation,
+            confirmed_ocr_text,
             simplified_output,
             checks_output,
-            baseline_output,
-            baseline_checks_output,
-            jargon_output,
+            translation_output,
             translate_button,
+            simplify_button,
         ],
+        show_progress="hidden",
+        show_api=False,
+    )
+    extract_button.click(
+        begin_photo_extraction,
+        outputs=[
+            ocr_status,
+            simplified_output,
+            checks_output,
+            translation_output,
+            translate_button,
+            simplify_button,
+        ],
+        show_progress="hidden",
+    ).then(
+        extract_photo_text,
+        inputs=ocr_image,
+        outputs=[
+            instructions,
+            ocr_status,
+            ocr_requires_review,
+            ocr_confirmation,
+            confirmed_ocr_text,
+            simplify_button,
+        ],
+        show_progress="full",
+    )
+    instructions.input(
+        reset_ocr_confirmation,
+        inputs=ocr_requires_review,
+        outputs=[
+            ocr_confirmation,
+            simplified_output,
+            checks_output,
+            translation_output,
+            translate_button,
+            confirmed_ocr_text,
+            simplify_button,
+        ],
+        show_progress="hidden",
+    )
+    ocr_confirmation.change(
+        record_ocr_confirmation,
+        inputs=[instructions, ocr_confirmation],
+        outputs=[confirmed_ocr_text, simplify_button],
+        show_progress="hidden",
+    )
+    example_button.click(
+        load_example,
+        outputs=[
+            instructions,
+            ocr_image,
+            ocr_requires_review,
+            ocr_confirmation,
+            ocr_status,
+            photo_preview,
+            confirmed_ocr_text,
+            simplified_output,
+            checks_output,
+            translation_output,
+            translate_button,
+            simplify_button,
+        ],
+    )
+    simplify_button.click(
+        run_demo,
+        inputs=[
+            instructions,
+            ocr_requires_review,
+            ocr_confirmation,
+            confirmed_ocr_text,
+        ],
+        outputs=[simplified_output, checks_output, translate_button],
         show_progress="full",
     )
     translate_button.click(
@@ -418,4 +887,5 @@ with gr.Blocks(
 
 
 if __name__ == "__main__":
-    demo.launch(show_api=False)
+    _bypass_proxy_for_localhost()
+    demo.launch(show_api=False, max_file_size="12mb")

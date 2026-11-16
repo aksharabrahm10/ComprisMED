@@ -12,29 +12,6 @@ sys.path.insert(0, str(ROOT))
 
 OUTPUT = Path(__file__).resolve().with_name("benchmark.jsonl")
 
-# Independent annotation from scenario authoring; deliberately does not call the
-# parser under evaluation. Every key is present to make empty categories explicit.
-def annotate(source: str) -> dict[str, list[str]]:
-    """Return the hand-authored expected salient facts for one scenario."""
-    # Scenario records below are authored together with their target mutation.
-    # A lightweight annotation ledger is kept separate from runtime extraction.
-    import re
-    number_pattern = r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|units?|tablets?|capsules?|puffs?|drops?|sprays?|readings?|treatments?)\b|\b\d+\s+readings?\b"
-    numbers = re.findall(number_pattern, source, re.I)
-    if not numbers:
-        numbers = re.findall(r"\b\d+(?:\.\d+)?\b", re.sub(r"\b\d{1,2}:\d{2}\b", "", re.sub(r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:,\s*\d{4})?|\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?", "", source, flags=re.I)), re.I)
-    dates = re.findall(r"\b(?:\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?|(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}(?:,\s*\d{4})?)\b", source, re.I)
-    durations = re.findall(r"\b(?:for\s+)?\d+\s+(?:minutes?|hours?|days?|weeks?|months?|years?)\b", source, re.I)
-    frequencies = re.findall(r"\b(?:(?:once|twice|one time|two times|three times|four times|one|two|three|four)\s+(?:(?:a|per|each)\s+day|daily)|every\s+\d+\s+hours?|daily|weekly|at bedtime|every morning|each morning|each night|every night)\b", source, re.I)
-    negations = re.findall(r"\b(?:do not|don't|does not|doesn't|not|never|avoid|stop)\b", source, re.I)
-    # Preserve first appearance and normalize incidental whitespace/case only.
-    return {"number_or_dose": list(dict.fromkeys(x.strip() for x in numbers)),
-            "frequency": list(dict.fromkeys(x.strip() for x in frequencies)),
-            "duration": list(dict.fromkeys(re.sub(r"^for\s+", "", x.strip(), flags=re.I) for x in durations)),
-            "date": list(dict.fromkeys(x.strip() for x in dates)),
-            "negation": list(dict.fromkeys(x.strip() for x in negations))}
-
-
 def complexity_level(source: str) -> str:
     word_count = len(re.findall(r"\b[\w'-]+\b", source))
     conditional = re.search(
@@ -122,8 +99,8 @@ FAMILIES: dict[str, dict[str, object]] = {
         "cases": [
             ("Record the fictional measurement each morning for 6 days. Call the clinic on October 5, 2026 if any reading is outside the written range.", "date", "October 5, 2026", "October 6, 2026", ["follow_up", "warning"]),
             ("Check the sample device reading twice daily for 2 weeks and bring the log to your visit on 11/12/2026.", "duration", "2 weeks", "3 weeks", ["follow_up"]),
-            ("Weigh the sample object once daily for 5 days. Do not change any medicine based on this log; call the clinic if the number changes suddenly.", "negation", "Do not", "Please", ["restriction", "negation", "follow_up"]),
-            ("Use the sample monitor at bedtime every day until the follow-up on December 4, 2026. Contact the clinic if it shows an error.", "date", "December 4, 2026", "December 5, 2026", ["follow_up"]),
+            ("Weigh the sample object once daily for 5 days. Do not change any medicine based on this log; call the clinic if the number changes suddenly.", "frequency", "once daily", "twice daily", ["restriction", "negation", "follow_up"]),
+            ("Use the sample monitor at bedtime every day until the follow-up on December 4, 2026. Contact the clinic if it shows an error.", "frequency", "at bedtime", "each morning", ["follow_up"]),
             ("Write down the fictional symptom score every 4 hours while awake for 3 days. If it reaches 8, call the clinic; do not wait for the next visit.", "number_or_dose", "8", "9", ["follow_up", "negation"]),
         ],
     },
@@ -193,14 +170,11 @@ def build_rows() -> list[dict[str, object]]:
         for index, (source, mutation_category, target, replacement, context_tags) in enumerate(
             definition["cases"], start=1
         ):
-            expected_facts = annotate(source)
-            if target not in expected_facts[mutation_category]:
-                raise ValueError(
-                    f"{family}_{index:02d}: {target!r} missing from "
-                    f"{mutation_category}: {expected_facts[mutation_category]}"
-                )
+            # Each scenario explicitly names the single salient detail used for
+            # its controlled mutation; labels never come from the runtime parser.
+            expected_facts = {mutation_category: [target]}
             mutation_output = re.sub(re.escape(target), replacement, source, count=1)
-            if mutation_output == source:
+            if mutation_output == source or target not in source:
                 raise ValueError(f"{family}_{index:02d}: mutation did not change source")
             rows.append(
                 {
@@ -213,7 +187,10 @@ def build_rows() -> list[dict[str, object]]:
                     "source": source,
                     "required_facts": expected_facts,
                     "expected_extraction": expected_facts,
-                    "annotation_method": "independent project-authored annotation ledger; see annotate()",
+                    "annotation_method": (
+                        "scenario-author-selected required detail, explicitly paired "
+                        "with the controlled mutation; not generated by the extractor"
+                    ),
                     "context_annotations": context_tags,
                     "context_verification_scope": (
                         "not_checked_by_current_deterministic_verifier"

@@ -1,0 +1,2252 @@
+[
+  {
+    "id": "follow_up_monitoring_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Record the fictional measurement each morning for 6 days. Call the clinic on October 5, 2026 if any reading is outside the written range.",
+    "required_facts": {
+      "date": [
+        "October 5, 2026"
+      ]
+    },
+    "ai_only": {
+      "output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "October 5, 2026",
+          "status": "preserved",
+          "matched_fact": "October\u202f5,\u202f2026"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+      "output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "October 5, 2026",
+          "status": "preserved",
+          "matched_fact": "October\u202f5,\u202f2026"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "follow_up_monitoring_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Check the sample device reading twice daily for 2 weeks and bring the log to your visit on 11/12/2026.",
+    "required_facts": {
+      "duration": [
+        "2 weeks"
+      ]
+    },
+    "ai_only": {
+      "output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "2 weeks",
+          "status": "preserved",
+          "matched_fact": "2 weeks"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+      "output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "2 weeks",
+          "status": "preserved",
+          "matched_fact": "2 weeks"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "follow_up_monitoring_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Weigh the sample object once daily for 5 days. Do not change any medicine based on this log; call the clinic if the number changes suddenly.",
+    "required_facts": {
+      "frequency": [
+        "once daily"
+      ]
+    },
+    "ai_only": {
+      "output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "once daily",
+          "status": "preserved",
+          "matched_fact": "once each day"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+      "output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "once daily",
+          "status": "preserved",
+          "matched_fact": "once each day"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "follow_up_monitoring_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use the sample monitor at bedtime every day until the follow-up on December 4, 2026. Contact the clinic if it shows an error.",
+    "required_facts": {
+      "frequency": [
+        "at bedtime"
+      ]
+    },
+    "ai_only": {
+      "output": "- Use the sample monitor (a small device that checks your health) at bedtime each night.  \n- Do this every day until your follow\u2011up appointment on December\u202f4,\u202f2026.  \n- If the monitor shows an error (a problem message), call the clinic.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "at bedtime",
+          "status": "preserved",
+          "matched_fact": "at bedtime"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Use the sample monitor (a small device that checks your health) at bedtime each night.  \n- Do this every day until your follow\u2011up appointment on December\u202f4,\u202f2026.  \n- If the monitor shows an error (a problem message), call the clinic.",
+      "output": "- Use the sample monitor (a small device that checks your health) at bedtime each night.  \n- Do this every day until your follow\u2011up appointment on December\u202f4,\u202f2026.  \n- If the monitor shows an error (a problem message), call the clinic.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "at bedtime",
+          "status": "preserved",
+          "matched_fact": "at bedtime"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "follow_up_monitoring_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Write down the fictional symptom score every 4 hours while awake for 3 days. If it reaches 8, call the clinic; do not wait for the next visit.",
+    "required_facts": {
+      "number_or_dose": [
+        "8"
+      ]
+    },
+    "ai_only": {
+      "output": "- Write down your symptom score (the number you give to how you feel) every 4\u202fhours while you are awake, for three days.  \n- If the score ever reaches\u202f8, call the clinic right away.  \n- Do not wait for your next scheduled visit.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "8",
+          "status": "preserved",
+          "matched_fact": "8"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Write down your symptom score (the number you give to how you feel) every 4\u202fhours while you are awake, for three days.  \n- If the score ever reaches\u202f8, call the clinic right away.  \n- Do not wait for your next scheduled visit.",
+      "output": "- Write down your symptom score (the number you give to how you feel) every 4\u202fhours while you are awake, for three days.  \n- If the score ever reaches\u202f8, call the clinic right away.  \n- Do not wait for your next scheduled visit.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "8",
+          "status": "preserved",
+          "matched_fact": "8"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "restrictions_safety_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Do not drive for 12 hours after using Sample Medicine K 1 tablet. Ask another adult to help with travel.",
+    "required_facts": {
+      "negation": [
+        "Do not"
+      ]
+    },
+    "ai_only": {
+      "output": "- Do not drive or operate any vehicle for 12\u202fhours (half a day) after taking one tablet of Sample Medicine\u202fK.  \n- A \u201ctablet\u201d is a small pill you swallow.  \n- Ask another adult to give you a ride or help you travel during those 12\u202fhours.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Do not drive or operate any vehicle for 12\u202fhours (half a day) after taking one tablet of Sample Medicine\u202fK.  \n- A \u201ctablet\u201d is a small pill you swallow.  \n- Ask another adult to give you a ride or help you travel during those 12\u202fhours.",
+      "output": "- Do not drive or operate any vehicle for 12\u202fhours (half a day) after taking one tablet of Sample Medicine\u202fK.  \n- A \u201ctablet\u201d is a small pill you swallow.  \n- Ask another adult to give you a ride or help you travel during those 12\u202fhours.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "restrictions_safety_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab L 10 mg at bedtime for 7 days. Avoid alcohol and call the clinic on 01/08/2027 if you feel unusually sleepy.",
+    "required_facts": {
+      "date": [
+        "01/08/2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take Sampletab\u202fL\u202f10\u202fmg by mouth at bedtime (when you go to sleep) each night for 7\u202fdays.  \n- Do not drink any alcohol while you are taking this medicine.  \n- If you feel more sleepy than usual, call the clinic on\u202f01/08/2027.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "01/08/2027",
+          "status": "preserved",
+          "matched_fact": "01/08/2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take Sampletab\u202fL\u202f10\u202fmg by mouth at bedtime (when you go to sleep) each night for 7\u202fdays.  \n- Do not drink any alcohol while you are taking this medicine.  \n- If you feel more sleepy than usual, call the clinic on\u202f01/08/2027.",
+      "output": "- Take Sampletab\u202fL\u202f10\u202fmg by mouth at bedtime (when you go to sleep) each night for 7\u202fdays.  \n- Do not drink any alcohol while you are taking this medicine.  \n- If you feel more sleepy than usual, call the clinic on\u202f01/08/2027.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "01/08/2027",
+          "status": "preserved",
+          "matched_fact": "01/08/2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "restrictions_safety_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Keep Sample Medicine M 5 mL in its original container at room temperature for 30 days. Do not freeze it.",
+    "required_facts": {
+      "number_or_dose": [
+        "5 mL"
+      ]
+    },
+    "ai_only": {
+      "output": "- Keep Sample Medicine\u202fM (5\u202fmL) in the bottle it came in.  \n- Store it at room temperature\u202f\u2013 a normal indoor temperature, not hot or cold \u2013 for 30\u202fdays.  \n- Do not put it in the freezer.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "5 mL",
+          "status": "preserved",
+          "matched_fact": "5\u202fmL"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Keep Sample Medicine\u202fM (5\u202fmL) in the bottle it came in.  \n- Store it at room temperature\u202f\u2013 a normal indoor temperature, not hot or cold \u2013 for 30\u202fdays.  \n- Do not put it in the freezer.",
+      "output": "- Keep Sample Medicine\u202fM (5\u202fmL) in the bottle it came in.  \n- Store it at room temperature\u202f\u2013 a normal indoor temperature, not hot or cold \u2013 for 30\u202fdays.  \n- Do not put it in the freezer.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "5 mL",
+          "status": "preserved",
+          "matched_fact": "5\u202fmL"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "restrictions_safety_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take 1 Sampletab N 20 mg each morning for 10 days. Do not take it with Sample Supplement A; ask the clinic before restarting.",
+    "required_facts": {
+      "duration": [
+        "10 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take one Sampletab\u202fN tablet (20\u202fmg\u202f=\u202f20\u202fmilligrams) each morning for 10\u202fdays.  \n- Do not take it together with Sample\u202fSupplement\u202fA.  \n- Ask the clinic before you start taking it again.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "10 days",
+          "status": "preserved",
+          "matched_fact": "10\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take one Sampletab\u202fN tablet (20\u202fmg\u202f=\u202f20\u202fmilligrams) each morning for 10\u202fdays.  \n- Do not take it together with Sample\u202fSupplement\u202fA.  \n- Ask the clinic before you start taking it again.",
+      "output": "- Take one Sampletab\u202fN tablet (20\u202fmg\u202f=\u202f20\u202fmilligrams) each morning for 10\u202fdays.  \n- Do not take it together with Sample\u202fSupplement\u202fA.  \n- Ask the clinic before you start taking it again.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "10 days",
+          "status": "preserved",
+          "matched_fact": "10\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "restrictions_safety_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Store Sample Drops D upright and use 2 drops twice daily. Do not use after March 3, 2027.",
+    "required_facts": {
+      "date": [
+        "March 3, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Keep the Sample Drops D bottle standing upright (on its base) when you store it.  \n- Use 2 drops of the medicine two times each day.  \n- Do not use the drops after March\u202f3,\u202f2027 (the expiration date).",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "March 3, 2027",
+          "status": "preserved",
+          "matched_fact": "March\u202f3,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Keep the Sample Drops D bottle standing upright (on its base) when you store it.  \n- Use 2 drops of the medicine two times each day.  \n- Do not use the drops after March\u202f3,\u202f2027 (the expiration date).",
+      "output": "- Keep the Sample Drops D bottle standing upright (on its base) when you store it.  \n- Use 2 drops of the medicine two times each day.  \n- Do not use the drops after March\u202f3,\u202f2027 (the expiration date).",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "March 3, 2027",
+          "status": "preserved",
+          "matched_fact": "March\u202f3,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "taper_schedule_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "For the fictional taper, take Sampletab O 20 mg each morning for 3 days, then 10 mg each morning for 3 days. Do not skip a step.",
+    "required_facts": {
+      "number_or_dose": [
+        "20 mg"
+      ]
+    },
+    "ai_only": {
+      "output": "- This schedule slowly lowers the dose (called a taper).  \n- Take Sampletab\u202fO\u202f20\u202fmg by mouth each morning for the first\u202f3\u202fdays.  \n- Then take Sampletab\u202fO\u202f10\u202fmg by mouth each morning for the next\u202f3\u202fdays.  \n- Do not skip any step\u2014don\u2019t miss a dose or change the order.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "20 mg",
+          "status": "preserved",
+          "matched_fact": "20\u202fmg"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- This schedule slowly lowers the dose (called a taper).  \n- Take Sampletab\u202fO\u202f20\u202fmg by mouth each morning for the first\u202f3\u202fdays.  \n- Then take Sampletab\u202fO\u202f10\u202fmg by mouth each morning for the next\u202f3\u202fdays.  \n- Do not skip any step\u2014don\u2019t miss a dose or change the order.",
+      "output": "- This schedule slowly lowers the dose (called a taper).  \n- Take Sampletab\u202fO\u202f20\u202fmg by mouth each morning for the first\u202f3\u202fdays.  \n- Then take Sampletab\u202fO\u202f10\u202fmg by mouth each morning for the next\u202f3\u202fdays.  \n- Do not skip any step\u2014don\u2019t miss a dose or change the order.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "20 mg",
+          "status": "preserved",
+          "matched_fact": "20\u202fmg"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "taper_schedule_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Days 1 to 4: take Sampletab P 15 mg daily. Days 5 to 8: take 10 mg daily. Call the clinic on April 6, 2027 with questions.",
+    "required_facts": {
+      "date": [
+        "April 6, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Days\u202f1\u20114: take Sampletab\u202fP\u202f15\u202fmg (a tiny amount) by mouth once each day.  \n- Days\u202f5\u20118: take Sampletab\u202fP\u202f10\u202fmg by mouth once each day.  \n- Call the clinic on April\u202f6,\u202f2027 if you have any questions.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "April 6, 2027",
+          "status": "preserved",
+          "matched_fact": "April\u202f6,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Days\u202f1\u20114: take Sampletab\u202fP\u202f15\u202fmg (a tiny amount) by mouth once each day.  \n- Days\u202f5\u20118: take Sampletab\u202fP\u202f10\u202fmg by mouth once each day.  \n- Call the clinic on April\u202f6,\u202f2027 if you have any questions.",
+      "output": "- Days\u202f1\u20114: take Sampletab\u202fP\u202f15\u202fmg (a tiny amount) by mouth once each day.  \n- Days\u202f5\u20118: take Sampletab\u202fP\u202f10\u202fmg by mouth once each day.  \n- Call the clinic on April\u202f6,\u202f2027 if you have any questions.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "April 6, 2027",
+          "status": "preserved",
+          "matched_fact": "April\u202f6,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "taper_schedule_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab Q 2 tablets daily for 2 days, then 1 tablet daily for 5 days, then stop. Do not restart without calling the clinic.",
+    "required_facts": {
+      "number_or_dose": [
+        "2 tablets"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take **2 tablets** of **Sampletab\u202fQ** each day for the next **2 days** (daily = every day).  \n- Then take **1 tablet** of **Sampletab\u202fQ** each day for the next **5 days**.  \n- After those 5 days, **stop** taking the medicine (stop = do not take any more).  \n- **Do not start** the medicine again **unless you call the clinic first** (the clinic is the doctor's office).",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "2 tablets",
+          "status": "preserved",
+          "matched_fact": "2 tablets"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take **2 tablets** of **Sampletab\u202fQ** each day for the next **2 days** (daily = every day).  \n- Then take **1 tablet** of **Sampletab\u202fQ** each day for the next **5 days**.  \n- After those 5 days, **stop** taking the medicine (stop = do not take any more).  \n- **Do not start** the medicine again **unless you call the clinic first** (the clinic is the doctor's office).",
+      "output": "- Take **2 tablets** of **Sampletab\u202fQ** each day for the next **2 days** (daily = every day).  \n- Then take **1 tablet** of **Sampletab\u202fQ** each day for the next **5 days**.  \n- After those 5 days, **stop** taking the medicine (stop = do not take any more).  \n- **Do not start** the medicine again **unless you call the clinic first** (the clinic is the doctor's office).",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "2 tablets",
+          "status": "preserved",
+          "matched_fact": "2 tablets"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "taper_schedule_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use Sample Patch A for 7 days, then remove it for 2 days before starting the next patch. Do not cut the patch.",
+    "required_facts": {
+      "duration": [
+        "7 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- Sample Patch\u202fA \u2013 a small sticky patch that delivers medicine through the skin.  \n- Put the patch on and leave it in place for 7\u202fdays.  \n- After 7\u202fdays, take the patch off and keep it off for 2\u202fdays.  \n- After the 2\u2011day break, start a new patch.  \n- Do not cut the patch; keep it whole.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "7 days",
+          "status": "preserved",
+          "matched_fact": "7\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Sample Patch\u202fA \u2013 a small sticky patch that delivers medicine through the skin.  \n- Put the patch on and leave it in place for 7\u202fdays.  \n- After 7\u202fdays, take the patch off and keep it off for 2\u202fdays.  \n- After the 2\u2011day break, start a new patch.  \n- Do not cut the patch; keep it whole.",
+      "output": "- Sample Patch\u202fA \u2013 a small sticky patch that delivers medicine through the skin.  \n- Put the patch on and leave it in place for 7\u202fdays.  \n- After 7\u202fdays, take the patch off and keep it off for 2\u202fdays.  \n- After the 2\u2011day break, start a new patch.  \n- Do not cut the patch; keep it whole.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "7 days",
+          "status": "preserved",
+          "matched_fact": "7\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "taper_schedule_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab R 8 mg every 12 hours for 4 days, then once daily for 4 days. Contact the clinic if you miss both doses in one day.",
+    "required_facts": {
+      "frequency": [
+        "every 12 hours"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take Sampletab\u202fR\u202f8\u202fmg by mouth every 12\u202fhours (twice a day) for the first\u202f4\u202fdays.  \n- After those 4\u202fdays, take Sampletab\u202fR\u202f8\u202fmg once a day for the next\u202f4\u202fdays.  \n- If you miss both doses on the same day, call the clinic (your doctor\u2019s office) right away.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "every 12 hours",
+          "status": "preserved",
+          "matched_fact": "every 12\u202fhours"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take Sampletab\u202fR\u202f8\u202fmg by mouth every 12\u202fhours (twice a day) for the first\u202f4\u202fdays.  \n- After those 4\u202fdays, take Sampletab\u202fR\u202f8\u202fmg once a day for the next\u202f4\u202fdays.  \n- If you miss both doses on the same day, call the clinic (your doctor\u2019s office) right away.",
+      "output": "- Take Sampletab\u202fR\u202f8\u202fmg by mouth every 12\u202fhours (twice a day) for the first\u202f4\u202fdays.  \n- After those 4\u202fdays, take Sampletab\u202fR\u202f8\u202fmg once a day for the next\u202f4\u202fdays.  \n- If you miss both doses on the same day, call the clinic (your doctor\u2019s office) right away.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "frequency",
+          "source_fact": "every 12 hours",
+          "status": "preserved",
+          "matched_fact": "every 12\u202fhours"
+        }
+      ],
+      "checks_by_category": {
+        "frequency": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "injection_device_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use 1 marked unit of Sample Device A once daily for 5 days. Do not share the device or needle.",
+    "required_facts": {
+      "negation": [
+        "Do not"
+      ]
+    },
+    "ai_only": {
+      "output": "- Use one marked unit of Sample Device\u202fA each day for five days.  \n- \u201cMarked unit\u201d means the part that has a label or line showing the dose.  \n- Do not let anyone else use the device or its needle.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Use one marked unit of Sample Device\u202fA each day for five days.  \n- \u201cMarked unit\u201d means the part that has a label or line showing the dose.  \n- Do not let anyone else use the device or its needle.",
+      "output": "- Use one marked unit of Sample Device\u202fA each day for five days.  \n- \u201cMarked unit\u201d means the part that has a label or line showing the dose.  \n- Do not let anyone else use the device or its needle.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "injection_device_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Inject the fictional Sample Solution B 0.5 mL every 24 hours for 4 days, using a new sample needle each time.",
+    "required_facts": {
+      "duration": [
+        "4 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- Inject (use a needle to put the medicine into your body) 0.5\u202fmL of Sample Solution\u202fB.  \n- Do this once every 24\u202fhours.  \n- Continue for 4\u202fdays.  \n- Use a new sample needle each time (throw away the old needle and use a fresh one).",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "4 days",
+          "status": "preserved",
+          "matched_fact": "4\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Inject (use a needle to put the medicine into your body) 0.5\u202fmL of Sample Solution\u202fB.  \n- Do this once every 24\u202fhours.  \n- Continue for 4\u202fdays.  \n- Use a new sample needle each time (throw away the old needle and use a fresh one).",
+      "output": "- Inject (use a needle to put the medicine into your body) 0.5\u202fmL of Sample Solution\u202fB.  \n- Do this once every 24\u202fhours.  \n- Continue for 4\u202fdays.  \n- Use a new sample needle each time (throw away the old needle and use a fresh one).",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "4 days",
+          "status": "preserved",
+          "matched_fact": "4\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "injection_device_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use Sample Device C at 8:00 AM on May 8, 2027 and May 15, 2027. Call the clinic if the indicator turns red.",
+    "required_facts": {
+      "date": [
+        "May 8, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f8,\u202f2027.  \n- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f15,\u202f2027.  \n- Call the clinic if the indicator (the light or display) turns red.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "May 8, 2027",
+          "status": "preserved",
+          "matched_fact": "May\u202f8,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f8,\u202f2027.  \n- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f15,\u202f2027.  \n- Call the clinic if the indicator (the light or display) turns red.",
+      "output": "- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f8,\u202f2027.  \n- Use Sample Device\u202fC at\u202f8:00\u202fAM on\u202fMay\u202f15,\u202f2027.  \n- Call the clinic if the indicator (the light or display) turns red.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "May 8, 2027",
+          "status": "preserved",
+          "matched_fact": "May\u202f8,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "injection_device_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take 2 readings with Sample Device D every morning for 7 days. Do not adjust its settings; bring it to the visit.",
+    "required_facts": {
+      "number_or_dose": [
+        "2 readings"
+      ]
+    },
+    "ai_only": {
+      "output": "- Every morning for the next\u202f7\u202fdays, use Sample Device\u202fD to take **two readings** (measurements).  \n- Do **not** change or adjust any settings on the device.  \n- Bring the device with you to your appointment.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "2 readings",
+          "status": "preserved",
+          "matched_fact": "two readings"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Every morning for the next\u202f7\u202fdays, use Sample Device\u202fD to take **two readings** (measurements).  \n- Do **not** change or adjust any settings on the device.  \n- Bring the device with you to your appointment.",
+      "output": "- Every morning for the next\u202f7\u202fdays, use Sample Device\u202fD to take **two readings** (measurements).  \n- Do **not** change or adjust any settings on the device.  \n- Bring the device with you to your appointment.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "2 readings",
+          "status": "preserved",
+          "matched_fact": "two readings"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "injection_device_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Apply Sample Device E for 15 minutes twice daily for 3 days. Stop using it if the skin becomes irritated.",
+    "required_facts": {
+      "duration": [
+        "3 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- Apply Sample Device\u202fE for 15\u202fminutes each time.  \n- Do this twice a day (two times each day).  \n- Keep using it for 3\u202fdays.  \n- If your skin becomes irritated (red, itchy, or sore), stop using it.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "3 days",
+          "status": "preserved",
+          "matched_fact": "3\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Apply Sample Device\u202fE for 15\u202fminutes each time.  \n- Do this twice a day (two times each day).  \n- Keep using it for 3\u202fdays.  \n- If your skin becomes irritated (red, itchy, or sore), stop using it.",
+      "output": "- Apply Sample Device\u202fE for 15\u202fminutes each time.  \n- Do this twice a day (two times each day).  \n- Keep using it for 3\u202fdays.  \n- If your skin becomes irritated (red, itchy, or sore), stop using it.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "3 days",
+          "status": "preserved",
+          "matched_fact": "3\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "conditional_multistep_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "If the fictional reading is above 180, wait 15 minutes and check again. If it remains high twice, call the clinic; do not take extra Sampletab S.",
+    "required_facts": {
+      "negation": [
+        "do not"
+      ]
+    },
+    "ai_only": {
+      "output": "- If your reading (the number from your test) is above 180, wait 15 minutes.  \n- After 15 minutes, take another reading.  \n- If the second reading is still above 180, call the clinic.  \n- Do not take an extra dose of Sampletab\u202fS.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- If your reading (the number from your test) is above 180, wait 15 minutes.  \n- After 15 minutes, take another reading.  \n- If the second reading is still above 180, call the clinic.  \n- Do not take an extra dose of Sampletab\u202fS.",
+      "output": "- If your reading (the number from your test) is above 180, wait 15 minutes.  \n- After 15 minutes, take another reading.  \n- If the second reading is still above 180, call the clinic.  \n- Do not take an extra dose of Sampletab\u202fS.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "conditional_multistep_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab T 5 mg with breakfast for 6 days. If you miss breakfast, take it with lunch; do not take two doses together.",
+    "required_facts": {
+      "duration": [
+        "6 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take one Sampletab\u202fT tablet (5\u202fmg) with your breakfast every day for 6\u202fdays.  \n- If you miss breakfast, take the tablet with your lunch instead.  \n- Do not take two tablets at the same time.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "6 days",
+          "status": "preserved",
+          "matched_fact": "6\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take one Sampletab\u202fT tablet (5\u202fmg) with your breakfast every day for 6\u202fdays.  \n- If you miss breakfast, take the tablet with your lunch instead.  \n- Do not take two tablets at the same time.",
+      "output": "- Take one Sampletab\u202fT tablet (5\u202fmg) with your breakfast every day for 6\u202fdays.  \n- If you miss breakfast, take the tablet with your lunch instead.  \n- Do not take two tablets at the same time.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "6 days",
+          "status": "preserved",
+          "matched_fact": "6\u202fdays"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "conditional_multistep_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use 1 drop of Sample Eye Solution D in the right eye at bedtime. If pain develops, stop and call the clinic within 24 hours.",
+    "required_facts": {
+      "number_or_dose": [
+        "1 drop"
+      ]
+    },
+    "ai_only": {
+      "output": "- Put **1 drop** (a tiny amount) of **Sample Eye Solution\u202fD** into your **right eye** right before you go to sleep.  \n- If you feel any pain, **stop using the eye drops** and **call the clinic within the next 24\u202fhours**.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "1 drop",
+          "status": "preserved",
+          "matched_fact": "1 drop"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Put **1 drop** (a tiny amount) of **Sample Eye Solution\u202fD** into your **right eye** right before you go to sleep.  \n- If you feel any pain, **stop using the eye drops** and **call the clinic within the next 24\u202fhours**.",
+      "output": "- Put **1 drop** (a tiny amount) of **Sample Eye Solution\u202fD** into your **right eye** right before you go to sleep.  \n- If you feel any pain, **stop using the eye drops** and **call the clinic within the next 24\u202fhours**.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "number_or_dose",
+          "source_fact": "1 drop",
+          "status": "preserved",
+          "matched_fact": "1 drop"
+        }
+      ],
+      "checks_by_category": {
+        "number_or_dose": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "conditional_multistep_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "For 10 days, rinse the sample device after each use and let it air dry. Do not put it in Sample Cleaner A.",
+    "required_facts": {
+      "duration": [
+        "10 days"
+      ]
+    },
+    "ai_only": {
+      "output": "- For the next 10 days, rinse the device with water after every use and let it dry on its own (air\u2011dry).  \n- Do not put the device in Sample Cleaner\u202fA.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "10 days",
+          "status": "preserved",
+          "matched_fact": "10 days"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- For the next 10 days, rinse the device with water after every use and let it dry on its own (air\u2011dry).  \n- Do not put the device in Sample Cleaner\u202fA.",
+      "output": "- For the next 10 days, rinse the device with water after every use and let it dry on its own (air\u2011dry).  \n- Do not put the device in Sample Cleaner\u202fA.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "duration",
+          "source_fact": "10 days",
+          "status": "preserved",
+          "matched_fact": "10 days"
+        }
+      ],
+      "checks_by_category": {
+        "duration": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "conditional_multistep_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab U 12 mg once daily for 5 days. If you develop a rash, do not take the next dose and call the clinic on June 2, 2027.",
+    "required_facts": {
+      "date": [
+        "June 2, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take Sampletab\u202fU\u202f12\u202fmg by mouth once each day for five days.  \n- If a rash (red, itchy skin) appears, skip the next dose.  \n- Call the clinic on June\u202f2,\u202f2027 if a rash develops.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "June 2, 2027",
+          "status": "preserved",
+          "matched_fact": "June\u202f2,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take Sampletab\u202fU\u202f12\u202fmg by mouth once each day for five days.  \n- If a rash (red, itchy skin) appears, skip the next dose.  \n- Call the clinic on June\u202f2,\u202f2027 if a rash develops.",
+      "output": "- Take Sampletab\u202fU\u202f12\u202fmg by mouth once each day for five days.  \n- If a rash (red, itchy skin) appears, skip the next dose.  \n- Call the clinic on June\u202f2,\u202f2027 if a rash develops.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "June 2, 2027",
+          "status": "preserved",
+          "matched_fact": "June\u202f2,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "date_sensitive_care_01",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use Sample Cream B twice daily through July 7, 2027, then stop. Do not continue past that date unless the clinic confirms.",
+    "required_facts": {
+      "negation": [
+        "Do not"
+      ]
+    },
+    "ai_only": {
+      "output": "- Apply Sample\u202fCream\u202fB two times each day.  \n- Use it up to and including July\u202f7,\u202f2027.  \n- Stop using it after July\u202f7,\u202f2027.  \n- Do not keep using it past that date unless your doctor\u2019s office (clinic) tells you it\u2019s okay.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Apply Sample\u202fCream\u202fB two times each day.  \n- Use it up to and including July\u202f7,\u202f2027.  \n- Stop using it after July\u202f7,\u202f2027.  \n- Do not keep using it past that date unless your doctor\u2019s office (clinic) tells you it\u2019s okay.",
+      "output": "- Apply Sample\u202fCream\u202fB two times each day.  \n- Use it up to and including July\u202f7,\u202f2027.  \n- Stop using it after July\u202f7,\u202f2027.  \n- Do not keep using it past that date unless your doctor\u2019s office (clinic) tells you it\u2019s okay.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "negation",
+          "source_fact": "Do not",
+          "status": "preserved",
+          "matched_fact": "Do not"
+        }
+      ],
+      "checks_by_category": {
+        "negation": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "date_sensitive_care_02",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab V 4 mg once daily for 8 days, starting June 10, 2027. Your check-in is June 19, 2027.",
+    "required_facts": {
+      "date": [
+        "June 19, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 0,
+        "omission_count": 1,
+        "alteration_count": 0,
+        "preservation_rate": 0.0,
+        "omission_rate": 1.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "June 19, 2027",
+          "status": "omitted",
+          "matched_fact": null
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 0,
+          "omissions": 1,
+          "alterations": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+      "output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth once daily.  \n- Begin on June\u202f10\u202f2027.  \n- Continue for 8\u202fdays; the final dose is on June\u202f17\u202f2027.  \n- Your check\u2011in appointment is on June\u202f19\u202f2027.",
+      "repair_attempted": true,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 0,
+        "omission_count": 1,
+        "alteration_count": 0,
+        "preservation_rate": 0.0,
+        "omission_rate": 1.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "June 19, 2027",
+          "status": "omitted",
+          "matched_fact": null
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 0,
+          "omissions": 1,
+          "alterations": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "date_sensitive_care_03",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Use 2 sprays of Sample Nasal Solution A every morning until the appointment on 08/21/2027. Do not use it after the appointment.",
+    "required_facts": {
+      "date": [
+        "08/21/2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 0,
+        "omission_count": 0,
+        "alteration_count": 1,
+        "preservation_rate": 0.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 1.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "08/21/2027",
+          "status": "altered",
+          "matched_fact": "August\u202f21,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 0,
+          "omissions": 0,
+          "alterations": 1,
+          "preservation_rate": 0.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 1.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+      "output": "- Use 2 sprays of Sample Nasal Solution A each morning.  \n- Continue until your appointment on 08/21/2027.  \n- Do not use the spray after that date.",
+      "repair_attempted": true,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "08/21/2027",
+          "status": "preserved",
+          "matched_fact": "08/21/2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "date_sensitive_care_04",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Take Sampletab W 1 tablet every 12 hours for 3 days. Repeat the fictional test on September 6, 2027 and call with the result.",
+    "required_facts": {
+      "date": [
+        "September 6, 2027"
+      ]
+    },
+    "ai_only": {
+      "output": "- Take one tablet of Sampletab\u202fW every 12\u202fhours for three days.  \n- \u201cEvery 12\u202fhours\u201d means twice a day (about every half\u2011day, e.g., morning and evening).  \n- Keep taking the tablet for three full days.  \n- On September\u202f6,\u202f2027, repeat the fictional test.  \n- When you have the test result, call and give the result.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "September 6, 2027",
+          "status": "preserved",
+          "matched_fact": "September\u202f6,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Take one tablet of Sampletab\u202fW every 12\u202fhours for three days.  \n- \u201cEvery 12\u202fhours\u201d means twice a day (about every half\u2011day, e.g., morning and evening).  \n- Keep taking the tablet for three full days.  \n- On September\u202f6,\u202f2027, repeat the fictional test.  \n- When you have the test result, call and give the result.",
+      "output": "- Take one tablet of Sampletab\u202fW every 12\u202fhours for three days.  \n- \u201cEvery 12\u202fhours\u201d means twice a day (about every half\u2011day, e.g., morning and evening).  \n- Keep taking the tablet for three full days.  \n- On September\u202f6,\u202f2027, repeat the fictional test.  \n- When you have the test result, call and give the result.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "September 6, 2027",
+          "status": "preserved",
+          "matched_fact": "September\u202f6,\u202f2027"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  {
+    "id": "date_sensitive_care_05",
+    "split": "test",
+    "dataset": "synthetic",
+    "source": "Apply Sample Patch B at 9:00 AM on October 1, 2027 and remove it after 24 hours. Do not apply a second patch before October 2.",
+    "required_facts": {
+      "date": [
+        "October 2"
+      ]
+    },
+    "ai_only": {
+      "output": "- Put the Sample\u202fPatch\u202fB on (stick it to your skin) at 9:00\u202fa.m. on October\u202f1,\u202f2027.  \n- Take the patch off after it has been on for 24\u202fhours.  \n- Do not put on another patch until after October\u202f2.  \n- **Patch:** a small sticky band that delivers medicine through the skin.",
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "October 2",
+          "status": "preserved",
+          "matched_fact": "October\u202f2"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "initial_output": "- Put the Sample\u202fPatch\u202fB on (stick it to your skin) at 9:00\u202fa.m. on October\u202f1,\u202f2027.  \n- Take the patch off after it has been on for 24\u202fhours.  \n- Do not put on another patch until after October\u202f2.  \n- **Patch:** a small sticky band that delivers medicine through the skin.",
+      "output": "- Put the Sample\u202fPatch\u202fB on (stick it to your skin) at 9:00\u202fa.m. on October\u202f1,\u202f2027.  \n- Take the patch off after it has been on for 24\u202fhours.  \n- Do not put on another patch until after October\u202f2.  \n- **Patch:** a small sticky band that delivers medicine through the skin.",
+      "repair_attempted": false,
+      "metrics": {
+        "required_fact_count": 1,
+        "preserved_count": 1,
+        "omission_count": 0,
+        "alteration_count": 0,
+        "preservation_rate": 1.0,
+        "omission_rate": 0.0,
+        "alteration_rate": 0.0
+      },
+      "checks": [
+        {
+          "category": "date",
+          "source_fact": "October 2",
+          "status": "preserved",
+          "matched_fact": "October\u202f2"
+        }
+      ],
+      "checks_by_category": {
+        "date": {
+          "required_facts": 1,
+          "preserved": 1,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  }
+]

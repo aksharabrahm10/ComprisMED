@@ -1,98 +1,60 @@
 from __future__ import annotations
 
-from comprismed.facts import Check, extract_facts
+from comprismed.facts import Check
 
 
-def test_run_demo_shows_review_state_and_checks(monkeypatch):
-    import app
-
-    monkeypatch.setattr(
-        app,
-        "simplify",
-        lambda *_args, **_kwargs: {
-            "initial_output": "Take 5 mg twice daily for 7 days.",
-            "output": "Take 5 mg twice daily for 7 days.",
-            "source_facts": extract_facts("Take 5 mg twice daily for 7 days."),
-            "checks": [Check("number", "5 mg", "preserved", "5 mg")],
-            "review_required": False,
-        },
-    )
-    monkeypatch.setattr(
-        app,
-        "detect_jargon",
-        lambda _text: {"term_matches": [("oral", "by mouth")]},
-    )
-
-    simplified, review, baseline, baseline_review, jargon, translate_update = (
-        app.run_demo("Take 5 mg twice daily for 7 days.")
-    )
-
-    assert simplified == "- Take 5 mg twice daily for 7 days."
-    assert baseline == simplified
-    assert "Preserved" in baseline_review
-    assert "No changes found" in review
-    assert "does not confirm" in review
-    assert "oral" in jargon
-    assert translate_update["interactive"] is True
-
-
-def test_run_demo_flags_unresolved_details(monkeypatch):
-    import app
-
-    monkeypatch.setattr(
-        app,
-        "simplify",
-        lambda *_args, **_kwargs: {
-            "initial_output": "Take your medicine.",
-            "output": "Take your medicine.",
-            "source_facts": extract_facts("Take medicine twice daily."),
-            "checks": [Check("frequency", "twice daily", "omitted")],
-            "review_required": True,
-        },
-    )
-    monkeypatch.setattr(
-        app, "detect_jargon", lambda _text: {"term_matches": []}
-    )
-
-    _, review, _, _, _, _ = app.run_demo("Take medicine twice daily.")
-
-    assert "Please compare these details" in review
-    assert "Not found" in review
-
-
-def test_run_demo_compares_first_draft_with_repaired_output(monkeypatch):
+def test_run_demo_shows_only_actionable_detail_warnings(monkeypatch):
     import app
 
     source = "Take 5 mg twice daily for 7 days."
-    results = iter([
-        {"output": "Take your medicine regularly.",
-         "source_facts": extract_facts(source), "checks": [],
-         "review_required": False},
-        {
-            "output": "Take 5 mg twice daily for 7 days.",
-            "source_facts": extract_facts(source),
+    monkeypatch.setattr(
+        app,
+        "simplify",
+        lambda text, **kwargs: {
+            "output": source,
             "checks": [
                 Check("number_or_dose", "5 mg", "preserved", "5 mg"),
                 Check("frequency", "twice daily", "preserved", "twice daily"),
                 Check("duration", "7 days", "preserved", "7 days"),
             ],
-            "review_required": False,
         },
-    ])
-    monkeypatch.setattr(app, "simplify", lambda *_args, **_kwargs: next(results))
-    monkeypatch.setattr(
-        app, "detect_jargon", lambda _text: {"term_matches": []}
     )
 
-    verified, final_checks, baseline, baseline_checks, _, _ = app.run_demo(source)
+    simplified, review, translate_update = app.run_demo(source)
 
-    assert baseline == "- Take your medicine regularly."
-    assert verified == "- Take 5 mg twice daily for 7 days."
-    assert "Not found" in baseline_checks
-    assert "No changes found" in final_checks
+    assert simplified == "- Take 5 mg twice daily for 7 days."
+    assert review == (
+        "No changes were detected in the important details we checked."
+    )
+    assert "Preserved" not in review
+    assert translate_update["interactive"] is True
 
 
-def test_run_demo_does_not_claim_success_when_no_details_are_checked(monkeypatch):
+def test_run_demo_flags_missing_and_changed_details(monkeypatch):
+    import app
+
+    source = "Take 5 mg twice daily."
+    monkeypatch.setattr(
+        app,
+        "simplify",
+        lambda *_args, **_kwargs: {
+            "output": "Take 10 mg.",
+            "checks": [
+                Check("number_or_dose", "5 mg", "altered", "10 mg"),
+                Check("frequency", "twice daily", "omitted"),
+            ],
+        },
+    )
+
+    _, review, _ = app.run_demo(source)
+
+    assert "**Changed** · Dose or amount: 5 mg" in review
+    assert "output says “10 mg”" in review
+    assert "**Missing** · How often: twice daily" in review
+    assert "Preserved" not in review
+
+
+def test_run_demo_handles_instructions_without_checkable_details(monkeypatch):
     import app
 
     source = "Your appointment is next week."
@@ -100,21 +62,35 @@ def test_run_demo_does_not_claim_success_when_no_details_are_checked(monkeypatch
         app,
         "simplify",
         lambda *_args, **_kwargs: {
-            "initial_output": source,
             "output": source,
-            "source_facts": extract_facts(source),
             "checks": [],
-            "review_required": False,
         },
     )
-    monkeypatch.setattr(
-        app, "detect_jargon", lambda _text: {"term_matches": []}
-    )
 
-    _, review, _, _, _, _ = app.run_demo(source)
+    _, review, _ = app.run_demo(source)
 
-    assert "Nothing was available to check" in review
-    assert "No changes found" not in review
+    assert review == "No specific details were available to check."
+
+
+def test_run_demo_uses_verified_simplification(monkeypatch):
+    import app
+
+    calls = []
+
+    def fake_simplify(text, **kwargs):
+        calls.append((text, kwargs))
+        return {
+            "output": "Take 5 mg twice daily.",
+            "checks": [Check("number_or_dose", "5 mg", "preserved", "5 mg")],
+        }
+
+    monkeypatch.setattr(app, "simplify", fake_simplify)
+
+    app.run_demo("Take 5 mg twice daily.")
+
+    assert calls == [
+        ("Take 5 mg twice daily.", {"mode": "verified", "use_api": True})
+    ]
 
 
 def test_translation_requires_simplified_text(monkeypatch):
@@ -131,6 +107,19 @@ def test_translation_requires_simplified_text(monkeypatch):
         raise AssertionError("Translation should require simplified text.")
 
     assert app.translate_result("Draft", "Spanish") == "- translated"
+
+
+def test_run_demo_rejects_empty_instructions():
+    import gradio as gr
+
+    import app
+
+    try:
+        app.run_demo("  ")
+    except gr.Error as exc:
+        assert "Enter the instructions first" in str(exc)
+    else:
+        raise AssertionError("Empty instructions should be rejected.")
 
 
 def test_format_notes_displays_only_bullet_steps():

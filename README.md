@@ -1,11 +1,12 @@
 # comprisMED
 
-comprisMED is an AI + Health research prototype exploring whether source-grounded checks can help preserve selected important details when simplifying post-telehealth instructions. It is **not medical advice, not a medical device, and not clinically validated**. Use only fictional/synthetic examples; never enter real patient text or identifiers.
+comprisMED is an AI + Health research prototype exploring whether source-grounded checks can help preserve selected important details when simplifying post-telehealth instructions. It is **not medical advice, not a medical device, and not clinically validated**. Type or upload fictional documents only; never use real patient text or identifiers.
 
 ## What it does
 
-- Detects jargon with a TF-IDF + logistic-regression sentence classifier trained on the small, synthetic `data/jargon_training.csv` starter set, and highlights terms in a small locally authored glossary.
+- Includes a TF-IDF + logistic-regression jargon classifier trained on the small, synthetic `data/jargon_training.csv` starter set as a research component; it is not shown in the simplified user interface.
 - Uses the Groq API for AI simplification. The current `.env` selects `openai/gpt-oss-120b`; the API key remains local and is never displayed. The prompt includes a style example from the synthetic jargon set, while still instructing the model to handle new wording generally.
+- Lets users type/paste instructions or upload a fictional JPG/JPEG/PNG. RapidOCR runs locally in the app process; the image is not sent to Groq. The uploaded file is removed after preview preparation, and the preview/OCR image stay in session memory only. Users must review and confirm extracted text before simplification; only the text is sent to Groq when they select Simplify.
 - Checks whether selected dose/number, frequency, duration, date, and negation markers appear unchanged in the output.
 - Compares an AI-only draft with an AI + detail-check draft. In the checked path, a failed check can trigger one Groq repair, after which remaining failures are shown for human review.
 - Optionally translates the checked draft with Groq. Translation is not independently checked, so do not treat it as verified.
@@ -38,7 +39,7 @@ Open a terminal in the project folder and run:
 
 Wait for the local URL printed by Gradio and open it in your browser. Keep the terminal open while using the app; press `Ctrl+C` there to stop it. To use the regular `python` command instead, activate the environment first with `.\.venv\Scripts\Activate.ps1`.
 
-The app's **Use example** button fills in fictional text. Select **Simplify and compare** to send requests to Groq and see the AI-only draft beside the AI + detail-check result. The request makes at least two model calls; a repair may make another. API availability, quotas, and account billing apply. Do not use real patient information.
+The app's **Use sample instructions** button fills in fictional text. Or upload a fictional JPG, JPEG, or PNG, compare the editable OCR text with its preview, correct it, and confirm the review checkbox. OCR text cannot be simplified until this confirmation is checked; editing it afterward clears the confirmation. Select **Simplify** to generate a checked explanation. If selected details appear missing or changed, the app may request one repair and flags any remaining issues. Choose a language beside the result, then select **Translate**. A repair or translation makes an additional model call. API availability, quotas, and account billing apply. Images are processed locally and are not sent to Groq. Only instruction text is sent when simplification or translation is requested. Never use real patient information.
 
 If the app reports an error:
 
@@ -51,12 +52,13 @@ If the app reports an error:
 ### What a user does in the app
 
 1. Double-click `Start_comprisMED.bat`; the app opens in a browser.
-2. Select **Use example** or paste fictional instructions into the input. Never use real patient information.
-3. Select **Simplify instructions**. The app generates an ordinary AI draft, checks selected details against the source, and shows the checked/possibly repaired draft as short bullet notes.
-4. Read the detail-check summary below the notes. “Preserved” means only that a supported literal check matched; it does not prove medical correctness. Expand **Compare AI-only and AI + detail check** to inspect both versions.
-5. The translation controls are visible below the simplified result. Choose a language and select **Translate**. Translation is not independently checked.
+2. Select **Use sample instructions**, type fictional instructions, or upload a fictional JPG/JPEG/PNG.
+3. For an image, inspect the preview, select **Extract text**, compare and correct the editable text, then check **I checked the extracted text against the photo**. If the photo is blurry or unreadable, retake it or type the text; no partial OCR result is silently simplified.
+4. Select **Simplify**.
+5. Read the simplified bullet notes. The detail area shows only missing or changed supported details; otherwise it gives a brief status. A clear status is not proof of medical correctness.
+6. Choose a language beside the result and select **Translate**. Translation is not independently checked.
 
-Both drafts come from the AI; the comparison reuses the first draft as its baseline and shows the result after the verifier has checked it and, when needed, requested one repair. The detail checks are not a guarantee of accuracy, and text submitted for AI features is sent to Groq.
+The main app is focused on the checked explanation and does not display the research comparison. The separate experiment below compares AI-only with AI + source-check + repair on held-out synthetic examples. Text submitted for AI features is sent to Groq.
 
 Run the local tests from VS Code or PowerShell:
 
@@ -69,63 +71,101 @@ If PowerShell blocks activation, use `.venv\Scripts\python.exe -m pytest -q` dir
 
 ## Experiment
 
-With the Groq key set, run the held-out split:
+The held-out synthetic checker test runs without Groq:
 
 ```powershell
-python experiments\run_experiment.py
+.\.venv\Scripts\python.exe experiments\run_experiment.py --dataset synthetic --split test --checker-only
 ```
 
-By default this evaluates only the `test` split and writes generated outputs and aggregate/category metrics to `results/`. The experiment makes model API calls and may incur costs. For development, set `$env:CARETRACE_SPLIT="train"` or `$env:CARETRACE_SPLIT="validation"` in PowerShell before running. Do not tune on test examples; if test-driven changes are made, report the leakage and make a new held-out split. It compares an unprompted AI-only output against an AI + source-check + one repair output and reports checker metrics overall and by category.
+With `GROQ_API_KEY` set in the local `.env`, run the paired model experiment:
 
-The benchmark has 60 fictional instruction scenarios across 12 instruction families: 20 train, 10 validation, and 30 held-out test. Entire families are assigned to a single split to reduce template leakage. Expected facts are project-authored separately from the parser under evaluation; see `annotate()` in the generator. The annotations are not independently adjudicated and do not establish annotation validity. Every scenario contains one controlled mutation; the test set includes 30 mutation cases. Warnings/follow-up/context are present in source texts but only the explicit fact categories are checked. The train split is a benchmark partition, not LLM training; Groq is used through inference only. This small authored benchmark is not an external validation set. Scripted metrics assess only annotated literal facts; they are not a clinical safety score.
+```powershell
+.\.venv\Scripts\python.exe experiments\run_experiment.py --dataset synthetic --split test
+```
+
+The AI-only condition receives no gold-fact hints. The verified condition starts from the same AI output, checks explicitly labeled details, and makes at most one Groq repair call. Outputs, aggregate/category preservation, omission and alteration metrics, and actual example successes/failures are saved under `results/`. To test the secondary public set, first complete its independent annotation workflow in [data/public/README.md](./data/public/README.md), then run:
+
+```powershell
+.\.venv\Scripts\python.exe experiments\run_experiment.py --dataset cochrane --split test
+```
+
+The synthetic benchmark contains 60 fictional scenarios across 12 instruction families: 20 train, 10 validation, and 30 held-out test examples. Entire families stay in one split. Each scenario has one project-author-selected important detail, explicitly paired with its controlled mutation; labels are not generated by the extractor. These labels have not been independently reviewed by a clinician. The test mutation results are controlled software tests, not evidence of clinical accuracy. Warnings and follow-up are included in source text but not covered by the current detail checker. Groq is used only through inference; no model is trained on the benchmark.
+
+The latest deterministic test run flagged 30/30 deliberately altered test cases and 0/30 unchanged-source controls; this exact-string synthetic check is not a result about AI simplifications or clinical safety. See the saved [checker metrics](./results/synthetic_test_checker_metrics.json).
+
+### Live Groq held-out experiment (2026-11-15)
+
+The command above completed on the 30-example synthetic test split using `openai/gpt-oss-120b`. Each example has one project-authored selected fact. The two conditions use the same initial AI draft; the verified condition checks it and makes at most one repair call. Four repairs were attempted.
+
+| Selected-fact outcome | AI-only | AI + detail verification |
+|---|---:|---:|
+| Examples / selected facts | 30 / 30 | 30 / 30 |
+| Preserved | 26 / 30 (86.7%) | 29 / 30 (96.7%) |
+| Flagged omissions | 1 / 30 (3.3%) | 1 / 30 (3.3%) |
+| Flagged alterations | 3 / 30 (10.0%) | 0 / 30 (0%) |
+
+| Detail type | AI-only preserved | AI + verification preserved |
+|---|---:|---:|
+| Dates | 8 / 10 (80.0%) | 9 / 10 (90.0%) |
+| Durations | 6 / 7 (85.7%) | 7 / 7 (100%) |
+| Frequencies | 3 / 3 (100%) | 3 / 3 (100%) |
+| Negations | 4 / 4 (100%) | 4 / 4 (100%) |
+| Amounts / quantities | 5 / 6 (83.3%) | 6 / 6 (100%) |
+
+These are **literal-checker preservation results, not clinically adjudicated omission or alteration rates**. For example, the AI-only output changed “2 weeks” to “14 days” and “2 readings” to “two measurements”; the checker flagged these meaning-preserving paraphrases. It also flagged a date as omitted when the output visibly contained the same date with different spacing/punctuation. A repair corrected some checker flags, but these examples show that the measured increase from 86.7% to 96.7% does not establish a reduction in medically meaningful errors. The test facts have not been independently reviewed by a clinician.
+
+The separate controlled-mutation checker test detected 30/30 deliberately altered strings and raised 0 alarms on 30 unchanged-source controls (precision, recall, and F1: 1.00; false-alarm rate: 0.00). This is a deterministic software test on synthetic strings, **not** an AI-only versus AI-plus result, not a model-generated output evaluation, and not a clinical metric. False-alarm rates are not estimated for the live Groq conditions.
+
+The exact generated records and aggregate metrics are [synthetic_test_outputs.json](./results/synthetic_test_outputs.json) and [synthetic_test_metrics.json](./results/synthetic_test_metrics.json). The metrics file includes examples of AI-only failures, repairs, and remaining verified failures. The output file contains all 30 paired examples.
+
+The Cochrane dataset is a secondary source of medical research summaries, not telehealth instructions. Its human-review workflow creates labels independently of both its target summary and this project's parser. Results remain blocked until both reviewers finish and disagreements are resolved. Neither benchmark establishes clinical safety or clinical validation.
 
 ### Data included in this repository
 
-| File | Size (current) | Contents and use | Data type |
+| Path | Current size / rows | Contents and use | Data type |
 |---|---:|---|---|
-| `data/jargon_training.csv` | 2,047 bytes; 40 labeled rows | Tiny starter set for fitting TF-IDF + logistic regression jargon classifier | Synthetic, project-authored |
-| `data/synthetic/benchmark.jsonl` | 84,942 bytes; 60 scenarios | Train/validation/test evaluation cases with parser-extracted facts and altered variants | Synthetic, project-authored |
-| `data/synthetic/build_benchmark.py` | Generator source | Rebuilds the JSONL benchmark from authored scenario definitions and derives extracted-fact labels using the project parser | Project code; no external data |
+| `data/jargon_training.csv` | 2,047 bytes / 40 | Small starter set for the TF-IDF + logistic-regression jargon classifier | Synthetic, project-authored |
+| `data/synthetic/benchmark.jsonl` | 68,489 bytes / 60 | Family-disjoint train/validation/test scenarios with one selected fact and a controlled mutation each | Synthetic, project-authored |
+| `data/public/cochrane/train.json` | 13,615,698 bytes / 3,568 | Research-summary source/target pairs; not post-telehealth instructions | Public, GEM Cochrane; CC BY 4.0 |
+| `data/public/cochrane/validation.json` | 1,538,508 bytes / 411 | Official validation split; not used as instruction data | Public, GEM Cochrane; CC BY 4.0 |
+| `data/public/cochrane/test.json` | 1,830,276 bytes / 480 | Official held-out split; 30 examples selected for source-only double review | Public, GEM Cochrane; CC BY 4.0 |
+| `data/public/cochrane/reviewer_a.csv`, `reviewer_b.csv` | 71,094 bytes each / 30 | Blank source-only templates; labels and review completion are pending human reviewers | Public source text; project annotation templates |
+| `data/public/README.md` | — | Dataset scope, license, attribution, limitations, and annotation/run commands | Project documentation |
 
-No public dataset files are bundled or used for training or evaluation. Med-EASi and other candidates below are cited for investigation only.
+The Cochrane files are downloaded at a pinned revision with checksums by `data/public/download_cochrane.py`. Dataset counts, sizes, and attribution are documented in [data/public/README.md](./data/public/README.md).
 
 ## Intended demo story / exact user flow
 
 1. Tell viewers: “This is comprisMED, an AI + Health research prototype for older adults reviewing instructions after a telehealth appointment. This is a fictional example, not real patient information.”
 2. Paste a **fictional** instruction such as: “Take 5 mg by mouth twice daily for 7 days. Do not stop early.”
 3. Explain that the jargon panel uses a tiny synthetic starter classifier and that its term matches are clues, not a complete medical vocabulary.
-4. Run **baseline** and show the draft plus the detail-check table.
-5. Run **verified** with the same source; show the initial draft, any repair, and any remaining flags. Describe the verifier as limited checks for literal details—not an understanding of clinical meaning.
-6. If the output is flagged, say that the prototype would direct a user to confirm the instruction with a clinician or pharmacist. Do not demonstrate by giving the audience a real treatment recommendation.
-7. Optionally translate the simplified output, then point out that the translation has not been independently verified and should be reviewed by a fluent speaker.
-8. End by showing the experiment metrics and one miss/false alarm, if present. Never claim clinical validation or invent successful results.
+4. Read the simplified bullet notes and the details flagged by the checker. Describe it as a limited literal check, not an understanding of clinical meaning.
+5. Optionally translate the simplified output, then point out that the translation has not been independently verified and should be reviewed by a fluent speaker.
+6. If the output is flagged, say that the prototype would direct a user to confirm the instruction with a clinician or pharmacist. Do not give the audience a real treatment recommendation.
+7. For the research portion, run the separate experiment command and show its actual output metrics and examples, if available. The AI-only versus AI + verification comparison is not part of the regular app page. Never claim clinical validation or invent successful results.
 
-## Data sources and reuse status (checked 2026-11-14)
+## Data sources and reuse status
 
-- **Synthetic preservation benchmark:** `data/synthetic/benchmark.jsonl` is authored for this project and labeled synthetic. It is not clinical data and is not drawn from a patient record.
-- **Synthetic jargon examples:** `data/jargon_training.csv` contains the starter labeled examples used by the local TF-IDF + logistic-regression classifier. It is not public or clinician-reviewed data.
-- **Med-EASi:** [Hugging Face dataset card](https://huggingface.co/datasets/cbasu/Med-EASi), [paper](https://arxiv.org/abs/2302.09155), and [authors' repository](https://github.com/Chandrayee/CTRL-SIMP). The card reports 1,979 short medical simplification pairs and transformation annotations. The public dataset card has no data license declared; the repository code's MIT license does not establish the dataset's reuse rights. We therefore do **not** download, bundle, or train on its rows. Ask the dataset authors for permission/terms before using it. It is relevant to simplification, not a post-telehealth fact-preservation benchmark.
-- **Medical texts simplification (Hugging Face):** [dataset card](https://huggingface.co/datasets/liliya-makhmutova/medical_texts_simplification) reports 30 triples (around 800 sentences) with original, human-simplified, and ChatGPT-simplified text; metadata labels it CC-BY-NC-4.0. The card says the source is the Kaggle [Medical Notes Classification competition](https://www.kaggle.com/competitions/medicalnotes-2019/rules), that human simplifications were not medically reviewed, and that use for treatment is not appropriate without professional supervision. The records are clinical notes, not synthetic telehealth instructions; the underlying Kaggle terms/de-identification could not be verified here. We do **not** bundle or send these notes to an API. It is a possible later research candidate only after checking both source-data permission and privacy/de-identification.
-- **Other Hugging Face result:** `Sadou/medical-reports-simplification-dataset` is described as generated by Gemini with automated validation and carries an Apache-2.0 metadata label, but that does not make its outputs human- or clinician-validated. It is not used.
-- **Hugging Face `huhucheck/medical_jargon`:** search result indicates a tiny JSON artifact; the dataset card/reuse license and suitability are not established. We do not use it.
-- **Kaggle and UCI searches:** Kaggle surfaced the upstream Medical Notes Classification competition, but its rules and data privacy status could not be verified from the accessible page; UCI's text search did not surface a relevant dataset. No external dataset is included.
+- **GEM Cochrane Simplification:** public medical research-summary source/target pairs, declared CC BY 4.0 and used only as a secondary dataset; detailed scope, citation, pinned revision and limitations are in [data/public/README.md](./data/public/README.md). It is not a medication-instruction benchmark.
+- **Med-EASi:** task-relevant, but the dataset card does not declare a reuse license and upstream repository has no data license. Not downloaded or used.
+- **Project benchmark and jargon examples:** fictional and synthetic, not patient data and not clinician-reviewed.
 - **Glossary:** prototype explanations are authored paraphrases in `comprismed/glossary.py`, not bulk-copied MedlinePlus text. [MedlinePlus Health Definitions](https://medlineplus.gov/healthdefinitions/) is a public reference to investigate, not a dataset bundled here. Verify the source and reuse terms before incorporating glossary text.
 - **Groq:** the app uses [Groq's OpenAI-compatible Chat Completions API](https://console.groq.com/docs/api-reference#chat-create) and the model configured in `.env`. Cite Groq and the exact model used in the final submission; recheck current model/provider terms. Only send fictional/synthetic text from this prototype.
 
-No external dataset is currently included or required to run the prototype. The local jargon training set is synthetic and too small to support claims about real-world jargon detection; it is a scaffold to replace with an appropriately licensed and independently labeled dataset. No API experiment results exist until a user runs the Groq-backed script; the unit tests only exercise local checks and mocked API behavior.
+One live-model synthetic test-split run is now saved and summarized above. It is not clinical evidence or proof of medical accuracy. The local jargon training set is too small to support claims about real-world jargon detection.
 
 ## Research plan and interpretation
 
-Primary comparison: baseline simplification versus one-check-and-repair verified simplification on the same held-out synthetic examples, using the same model settings. Report source-fact omission rate and alteration rate separately. Run injected-error tests and report precision, recall, F1, and false alarms. Include the examples and state the small sample size. Do not tune prompts on the held-out test cases.
+Primary comparison: baseline simplification versus one-check-and-repair verified simplification on the same held-out synthetic examples, using the same model settings. The 2026-11-15 run and its outputs are reported above. The metrics reflect only one labeled detail per instruction and a limited literal matcher. Do not present them as semantic or clinical correctness, and do not tune prompts on the held-out test cases.
 
 Known limitations: synthetic English-only scenarios; tiny jargon seed corpus; literal matching can miss paraphrases or flag safe rewordings; incomplete number/date/frequency/negation patterns; warning/restriction meaning and clinical context are not comprehensively checked; model outputs vary; an LLM repair can introduce new errors; translation is not verified; no older-adult usability study, clinician review, clinical validation, or safety guarantees. For real use, require human confirmation and clinician/pharmacist contact when anything is unclear.
 
 ## Suggested weekend completion checklist
 
-- [ ] Add the Groq key locally; never commit it.
-- [ ] Expand synthetic examples and have another person review source facts and deliberate mutations.
+- [x] Add the Groq key locally; never commit it.
+- [ ] Have another person review source facts and deliberate mutations.
 - [ ] Ask Med-EASi authors about dataset license/reuse before adopting its data.
-- [ ] Run baseline and verified modes on frozen held-out data; save outputs.
+- [x] Run baseline and verified modes on frozen held-out data; save outputs.
 - [ ] Inspect false alarms and missed injected errors; report results as measured.
 - [ ] Have fluent speakers review demo translations.
 - [ ] Make the one-page write-up and <2 minute video from actual runs and include the limits above.

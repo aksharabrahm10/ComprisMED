@@ -17,7 +17,7 @@ if not exist ".venv\Scripts\python.exe" (
     )
 )
 
-".venv\Scripts\python.exe" -c "import gradio, dotenv, requests, sklearn, pandas, numpy" >nul 2>&1
+".venv\Scripts\python.exe" -c "import gradio, dotenv, requests, sklearn, pandas, numpy, PIL, rapidocr_onnxruntime" >nul 2>&1
 if errorlevel 1 (
     echo Installing comprisMED requirements. This can take a few minutes the first time...
     ".venv\Scripts\python.exe" -m pip install -r requirements.txt

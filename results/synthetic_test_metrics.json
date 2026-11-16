@@ -1,0 +1,435 @@
+{
+  "dataset": "synthetic",
+  "split": "test",
+  "examples": {
+    "successes": [
+      {
+        "id": "follow_up_monitoring_01",
+        "source": "Record the fictional measurement each morning for 6 days. Call the clinic on October 5, 2026 if any reading is outside the written range.",
+        "ai_only_output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "verified_initial_output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+        "verified_final_output": "- Write down the measurement each morning for six days in a row.  \n- Compare each number to the range (the lowest and highest values) written on the paper.  \n- If any number is higher or lower than that range, call the clinic on October\u202f5,\u202f2026.  \n- \u201cOutside the range\u201d means the reading is not within the allowed limits.",
+        "repair_attempted": false,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "date",
+            "source_fact": "October 5, 2026",
+            "status": "preserved",
+            "matched_fact": "October\u202f5,\u202f2026"
+          }
+        ]
+      },
+      {
+        "id": "follow_up_monitoring_02",
+        "source": "Check the sample device reading twice daily for 2 weeks and bring the log to your visit on 11/12/2026.",
+        "ai_only_output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "verified_initial_output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+        "verified_final_output": "- Check the reading on the sample device two times each day for the next two weeks.  \n- Write each reading down in a log (a notebook or sheet of paper).  \n- Bring the completed log with you to your appointment on November\u202f12,\u202f2026.",
+        "repair_attempted": false,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "duration",
+            "source_fact": "2 weeks",
+            "status": "preserved",
+            "matched_fact": "2 weeks"
+          }
+        ]
+      },
+      {
+        "id": "follow_up_monitoring_03",
+        "source": "Weigh the sample object once daily for 5 days. Do not change any medicine based on this log; call the clinic if the number changes suddenly.",
+        "ai_only_output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "verified_initial_output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+        "verified_final_output": "- Weigh the sample object (the item you are testing) once each day for five days.  \n- Write down (record) the weight each day.  \n- Do **not** change any of your medicines based on this weight log.  \n- If the weight suddenly changes, call the clinic right away.",
+        "repair_attempted": false,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "frequency",
+            "source_fact": "once daily",
+            "status": "preserved",
+            "matched_fact": "once each day"
+          }
+        ]
+      }
+    ],
+    "failures": [
+      {
+        "id": "date_sensitive_care_02",
+        "source": "Take Sampletab V 4 mg once daily for 8 days, starting June 10, 2027. Your check-in is June 19, 2027.",
+        "ai_only_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 1,
+          "alteration_count": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        },
+        "verified_initial_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+        "verified_final_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth once daily.  \n- Begin on June\u202f10\u202f2027.  \n- Continue for 8\u202fdays; the final dose is on June\u202f17\u202f2027.  \n- Your check\u2011in appointment is on June\u202f19\u202f2027.",
+        "repair_attempted": true,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 1,
+          "alteration_count": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "date",
+            "source_fact": "June 19, 2027",
+            "status": "omitted",
+            "matched_fact": null
+          }
+        ]
+      }
+    ],
+    "ai_only_failures": [
+      {
+        "id": "date_sensitive_care_02",
+        "source": "Take Sampletab V 4 mg once daily for 8 days, starting June 10, 2027. Your check-in is June 19, 2027.",
+        "ai_only_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 1,
+          "alteration_count": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        },
+        "verified_initial_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth each day.  \n- Begin on June\u202f10\u202f2027.  \n- Continue taking it every day for 8\u202fdays (stop after June\u202f17\u202f2027).  \n- Your next check\u2011in (appointment) is on June\u202f19\u202f2027.",
+        "verified_final_output": "- Take one tablet of Sampletab\u202fV (4\u202fmg) by mouth once daily.  \n- Begin on June\u202f10\u202f2027.  \n- Continue for 8\u202fdays; the final dose is on June\u202f17\u202f2027.  \n- Your check\u2011in appointment is on June\u202f19\u202f2027.",
+        "repair_attempted": true,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 1,
+          "alteration_count": 0,
+          "preservation_rate": 0.0,
+          "omission_rate": 1.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "date",
+            "source_fact": "June 19, 2027",
+            "status": "omitted",
+            "matched_fact": null
+          }
+        ]
+      },
+      {
+        "id": "date_sensitive_care_03",
+        "source": "Use 2 sprays of Sample Nasal Solution A every morning until the appointment on 08/21/2027. Do not use it after the appointment.",
+        "ai_only_output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 0,
+          "alteration_count": 1,
+          "preservation_rate": 0.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 1.0
+        },
+        "verified_initial_output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+        "verified_final_output": "- Use 2 sprays of Sample Nasal Solution A each morning.  \n- Continue until your appointment on 08/21/2027.  \n- Do not use the spray after that date.",
+        "repair_attempted": true,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "date",
+            "source_fact": "08/21/2027",
+            "status": "preserved",
+            "matched_fact": "08/21/2027"
+          }
+        ]
+      }
+    ],
+    "repaired_successes": [
+      {
+        "id": "date_sensitive_care_03",
+        "source": "Use 2 sprays of Sample Nasal Solution A every morning until the appointment on 08/21/2027. Do not use it after the appointment.",
+        "ai_only_output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+        "ai_only_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 0,
+          "omission_count": 0,
+          "alteration_count": 1,
+          "preservation_rate": 0.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 1.0
+        },
+        "verified_initial_output": "- Give yourself **2 quick puffs (sprays)** of **Sample Nasal Solution A** in each nostril every morning.  \n- Keep doing this **until your appointment on August\u202f21,\u202f2027**.  \n- **Do not use** the nasal spray **after that date**.",
+        "verified_final_output": "- Use 2 sprays of Sample Nasal Solution A each morning.  \n- Continue until your appointment on 08/21/2027.  \n- Do not use the spray after that date.",
+        "repair_attempted": true,
+        "verified_metrics": {
+          "required_fact_count": 1,
+          "preserved_count": 1,
+          "omission_count": 0,
+          "alteration_count": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "remaining_checks": [
+          {
+            "category": "date",
+            "source_fact": "08/21/2027",
+            "status": "preserved",
+            "matched_fact": "08/21/2027"
+          }
+        ]
+      }
+    ]
+  },
+  "model": "openai/gpt-oss-120b",
+  "comparison": "AI-only output versus the same AI output plus deterministic checks and at most one repair call",
+  "conditions": {
+    "ai_only": {
+      "examples": 30,
+      "required_facts": 30,
+      "preserved": 28,
+      "preservation_rate": 0.9333333333333333,
+      "omissions": 1,
+      "omission_rate": 0.03333333333333333,
+      "alterations": 1,
+      "alteration_rate": 0.03333333333333333,
+      "per_category": {
+        "date": {
+          "required_facts": 10,
+          "preserved": 8,
+          "omissions": 1,
+          "alterations": 1,
+          "preservation_rate": 0.8,
+          "omission_rate": 0.1,
+          "alteration_rate": 0.1
+        },
+        "duration": {
+          "required_facts": 7,
+          "preserved": 7,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "frequency": {
+          "required_facts": 3,
+          "preserved": 3,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "negation": {
+          "required_facts": 4,
+          "preserved": 4,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "number_or_dose": {
+          "required_facts": 6,
+          "preserved": 6,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    },
+    "ai_plus_verification": {
+      "examples": 30,
+      "required_facts": 30,
+      "preserved": 29,
+      "preservation_rate": 0.9666666666666667,
+      "omissions": 1,
+      "omission_rate": 0.03333333333333333,
+      "alterations": 0,
+      "alteration_rate": 0.0,
+      "per_category": {
+        "date": {
+          "required_facts": 10,
+          "preserved": 9,
+          "omissions": 1,
+          "alterations": 0,
+          "preservation_rate": 0.9,
+          "omission_rate": 0.1,
+          "alteration_rate": 0.0
+        },
+        "duration": {
+          "required_facts": 7,
+          "preserved": 7,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "frequency": {
+          "required_facts": 3,
+          "preserved": 3,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "negation": {
+          "required_facts": 4,
+          "preserved": 4,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        },
+        "number_or_dose": {
+          "required_facts": 6,
+          "preserved": 6,
+          "omissions": 0,
+          "alterations": 0,
+          "preservation_rate": 1.0,
+          "omission_rate": 0.0,
+          "alteration_rate": 0.0
+        }
+      }
+    }
+  },
+  "controlled_mutation_detection": {
+    "description": "Deterministic verifier on clean source text and controlled synthetic mutations; not a Groq result or clinical measure.",
+    "overall": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_alarm_rate": 0.0,
+      "false_alarms": 0,
+      "true_positives": 30,
+      "false_negatives": 0,
+      "true_negatives": 30
+    },
+    "per_category": {
+      "date": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 10,
+        "false_negatives": 0,
+        "true_negatives": 10
+      },
+      "duration": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 7,
+        "false_negatives": 0,
+        "true_negatives": 7
+      },
+      "frequency": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 3,
+        "false_negatives": 0,
+        "true_negatives": 3
+      },
+      "negation": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 4,
+        "false_negatives": 0,
+        "true_negatives": 4
+      },
+      "number_or_dose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 6,
+        "false_negatives": 0,
+        "true_negatives": 6
+      }
+    }
+  }
+}

@@ -120,7 +120,9 @@ def compare_facts(
     required_facts: dict[str, list[str]] | None = None,
 ) -> list[Check]:
     """Classify each required literal fact as preserved, omitted, or altered."""
-    source_facts = required_facts or extract_facts(source_text)
+    source_facts = (
+        required_facts if required_facts is not None else extract_facts(source_text)
+    )
     output_facts = extract_facts(simplified_text)
     checks: list[Check] = []
     for category, facts in source_facts.items():

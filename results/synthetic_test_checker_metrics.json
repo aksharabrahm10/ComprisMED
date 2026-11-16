@@ -1,0 +1,69 @@
+{
+  "dataset": "synthetic",
+  "split": "test",
+  "controlled_mutation_detection": {
+    "description": "Deterministic verifier on clean source text and controlled synthetic mutations; not a Groq result or clinical measure.",
+    "overall": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_alarm_rate": 0.0,
+      "false_alarms": 0,
+      "true_positives": 30,
+      "false_negatives": 0,
+      "true_negatives": 30
+    },
+    "per_category": {
+      "date": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 10,
+        "false_negatives": 0,
+        "true_negatives": 10
+      },
+      "duration": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 7,
+        "false_negatives": 0,
+        "true_negatives": 7
+      },
+      "frequency": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 3,
+        "false_negatives": 0,
+        "true_negatives": 3
+      },
+      "negation": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 4,
+        "false_negatives": 0,
+        "true_negatives": 4
+      },
+      "number_or_dose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_alarm_rate": 0.0,
+        "false_alarms": 0,
+        "true_positives": 6,
+        "false_negatives": 0,
+        "true_negatives": 6
+      }
+    }
+  }
+}
