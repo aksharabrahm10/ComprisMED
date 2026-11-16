@@ -22,13 +22,15 @@ On 2026-11-15, the live run used the 30 held-out synthetic test cases with `open
 
 | Result across selected facts | AI-only | AI + verification |
 |---|---:|---:|
-| Preserved | 26/30 (86.7%) | 29/30 (96.7%) |
+| Preserved | 28/30 (93.3%) | 29/30 (96.7%) |
 | Flagged omissions | 1/30 (3.3%) | 1/30 (3.3%) |
-| Flagged alterations | 3/30 (10.0%) | 0/30 |
+| Flagged alterations | 1/30 (3.3%) | 0/30 |
+
+The detail-type breakdown for AI-only versus AI + verification was: dates 8/10 vs. 9/10; durations 7/7 vs. 7/7; frequencies 3/3 vs. 3/3; negations 4/4 vs. 4/4; amounts/quantities 6/6 vs. 6/6.
 
 The checker-only controlled mutation test is a separate deterministic test: it flagged 30/30 deliberately altered synthetic strings and 0/30 unchanged controls (precision, recall, and F1 = 1.00; false-alarm rate = 0.00). Those results are not Groq experiment results.
 
-These model-condition rates are **literal-checker outcomes, not human-judged semantic or clinical outcomes**. The baseline was flagged for rewriting “2 weeks” as “14 days” and “2 readings” as “two measurements,” both meaning-preserving paraphrases. A date was also flagged as omitted even though it appeared in the output with different spacing/punctuation. After repair, 29/30 selected facts passed the matcher; the remaining flagged date appears in the output in a different format. These examples show that the observed increase in match rate does not prove a reduction in medically meaningful errors. The synthetic expected facts have not been independently reviewed by a clinician; no clinical validation or medical accuracy is claimed.
+These model-condition rates are **literal-checker outcomes, not human-judged semantic or clinical outcomes**. The matcher may flag meaning-preserving paraphrases or formatting differences, and it may fail to recognize other changes. The observed difference does not prove a reduction in medically meaningful errors. The synthetic expected facts have not been independently reviewed by a clinician; no clinical validation or medical accuracy is claimed.
 
 Full records and metrics are saved in `results/synthetic_test_outputs.json` and `results/synthetic_test_metrics.json`. The separate checker-only result is `results/synthetic_test_checker_metrics.json`. Re-run the paired experiment with `.\.venv\Scripts\python.exe experiments\run_experiment.py --dataset synthetic --split test`; the key is read from the local `.env`. Local unit tests and browser smoke tests establish functionality only, not clinical validity.
 

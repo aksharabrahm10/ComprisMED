@@ -71,6 +71,33 @@ def test_readable_ocr_text_joins_words_on_same_row_and_preserves_line_breaks():
     assert ocr._readable_ocr_text(results) == "Take 5 mg\ntwice daily"
 
 
+def test_restore_word_spacing_for_concatenated_medical_instructions() -> None:
+    source = (
+        "Assessment&Plan: Patientpresentswithacuteonsetcephalalgiaaccompaniedby "
+        "photophobia and phonophobia,withoutfocal neurological deficits.Clinical "
+        "picture is mostconsistentwith episodicmigrainewithoutaura.Differential "
+        "includestension-typecephalalgia,thoughpresentationfavors "
+        "vascular/neurogenicetiology. Recommendations: Initiate abortive therapy with "
+        "sumatriptan50 mg POPRN at onset of frequencyofepisodes. Maintain "
+        "acephalalgia diary toidentifypotential triggers. "
+        "Seekimmediateemergentevaluationifpatientdevelopsredflag "
+        "symptoms,including thunderclaponset,pyrexia,nuchal rigidity,r diplopia."
+    )
+
+    assert ocr._restore_word_spacing(source) == (
+        "Assessment & Plan: Patient presents with acute onset cephalalgia "
+        "accompanied by "
+        "photophobia and phonophobia, without focal neurological deficits. "
+        "Clinical picture is most consistent with episodic migraine without aura. "
+        "Differential includes tension-type cephalalgia, though presentation "
+        "favors vascular/neurogenic etiology. Recommendations: Initiate abortive therapy with "
+        "sumatriptan 50 mg PO PRN at onset of frequency of episodes. Maintain "
+        "a cephalalgia diary to identify potential triggers. Seek immediate "
+        "emergent evaluation if patient develops red flag symptoms, including "
+        "thunderclap onset, pyrexia, nuchal rigidity, r diplopia."
+    )
+
+
 def test_extract_instruction_text_rejects_empty_or_low_confidence_text(
     monkeypatch,
 ) -> None:

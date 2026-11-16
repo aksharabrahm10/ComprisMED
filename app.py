@@ -160,7 +160,7 @@ html, body, #root, .gradio-container {
     font-size: 1rem !important;
     font-weight: 600 !important;
 }
-.cm-panel input, .cm-panel [role="combobox"] {
+.cm-panel input:not([type="checkbox"]), .cm-panel [role="combobox"] {
     min-height: 52px !important;
     background: #fffefa !important;
     color: #1d3440 !important;
@@ -203,12 +203,18 @@ html, body, #root, .gradio-container {
     font-weight: 650 !important;
 }
 .cm-upload-row { align-items: stretch !important; gap: 14px !important; }
-.cm-photo-upload, .cm-photo-preview {
+.cm-photo-upload, .cm-photo-preview.block {
     min-width: 0 !important;
     border: 1px solid #d8d8cf !important;
     border-radius: 12px !important;
     background: #f7f5ef !important;
     color: #1d3440 !important;
+}
+.cm-photo-preview.prose {
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
 }
 .cm-photo-upload label, .cm-photo-upload .file-preview,
 .cm-photo-upload .file-preview * {
@@ -228,13 +234,20 @@ html, body, #root, .gradio-container {
     justify-content: center !important;
     overflow: hidden !important;
 }
-.cm-photo-preview:not(:has(img)) {
+.cm-photo-preview.block:not(:has(img)) {
     display: none !important;
     min-height: 0 !important;
     padding: 0 !important;
     border: 0 !important;
 }
-.cm-photo-preview img {
+.cm-photo-preview.block:has(img) {
+    display: flex !important;
+    min-height: 120px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+.cm-photo-preview.prose img {
     display: block !important;
     max-width: 100% !important;
     max-height: 230px !important;
@@ -254,6 +267,19 @@ html, body, #root, .gradio-container {
     background: #e9eee8 !important;
 }
 .cm-photo-confirm, .cm-photo-confirm * { color: #1d3440 !important; }
+.cm-photo-confirm input[type="checkbox"] {
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 !important;
+    accent-color: #477a73 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.cm-photo-confirm input[type="checkbox"]:checked {
+    background-color: #477a73 !important;
+}
 .cm-language-select {
     margin-top: 20px !important;
 }
@@ -688,8 +714,7 @@ with gr.Blocks(
                 """
             )
             gr.Markdown(
-                "**Safety note:** Prototype only—not medical advice. Type or upload "
-                "fictional documents only; never use real patient information.",
+                "**Safety note:** This is a prototype only, not medical advice.",
                 elem_classes=["cm-safety"],
             )
 
@@ -867,7 +892,7 @@ with gr.Blocks(
             simplify_button,
         ],
     )
-    simplify_button.click(
+    simplify_event = simplify_button.click(
         run_demo,
         inputs=[
             instructions,
@@ -878,11 +903,25 @@ with gr.Blocks(
         outputs=[simplified_output, checks_output, translate_button],
         show_progress="full",
     )
-    translate_button.click(
+    simplify_event.then(
+        fn=None,
+        inputs=[],
+        outputs=[],
+        js="() => { setTimeout(() => document.querySelectorAll('.cm-output textarea').forEach((field) => { field.scrollTop = 0; }), 0); return []; }",
+        show_progress="hidden",
+    )
+    translate_event = translate_button.click(
         translate_result,
         inputs=[simplified_output, language],
         outputs=translation_output,
         show_progress="full",
+    )
+    translate_event.then(
+        fn=None,
+        inputs=[],
+        outputs=[],
+        js="() => { setTimeout(() => document.querySelectorAll('.cm-translation textarea').forEach((field) => { field.scrollTop = 0; }), 0); return []; }",
+        show_progress="hidden",
     )
 
 

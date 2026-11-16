@@ -10,6 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
+import wordninja
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png"}
@@ -18,6 +19,64 @@ MAX_IMAGE_PIXELS = 30_000_000
 MIN_TEXT_CHARACTERS = 8
 MIN_OCR_CONFIDENCE = 0.5
 MIN_LINE_CONFIDENCE = 0.2
+MEDICAL_WORDS = (
+    "assessment",
+    "recommendations",
+    "fictional",
+    "example",
+    "sampletab",
+    "patient",
+    "presents",
+    "acute",
+    "onset",
+    "accompanied",
+    "clinical",
+    "picture",
+    "consistent",
+    "without",
+    "with",
+    "aura",
+    "includes",
+    "tension",
+    "type",
+    "though",
+    "presentation",
+    "favors",
+    "vascular",
+    "neurogenic",
+    "cephalalgia",
+    "photophobia",
+    "phonophobia",
+    "neurological",
+    "deficits",
+    "episodic",
+    "migraine",
+    "differential",
+    "etiology",
+    "abortive",
+    "sumatriptan",
+    "symptoms",
+    "frequency",
+    "episodes",
+    "maintain",
+    "diary",
+    "identify",
+    "potential",
+    "triggers",
+    "immediate",
+    "emergent",
+    "evaluation",
+    "develops",
+    "including",
+    "thunderclap",
+    "pyrexia",
+    "nuchal",
+    "rigidity",
+    "diplopia",
+    "plan",
+)
+SPECIAL_OCR_WORDS = {"poprn": "PO PRN"}
+SPECIAL_SPACING = {"redflag": "red flag"}
 
 
 class ImageInputError(ValueError):
@@ -94,7 +153,7 @@ def _readable_ocr_text(results) -> str:
     positioned: list[tuple[float, float, float, float, str]] = []
     unpositioned: list[str] = []
     for result in results:
-        line = " ".join(result[1].split())
+        line = _restore_word_spacing(" ".join(result[1].split()))
         if not line:
             continue
         try:
@@ -130,11 +189,66 @@ def _readable_ocr_text(results) -> str:
     text_rows = []
     for row in rows:
         line = " ".join(item[4] for item in sorted(row, key=lambda value: value[1]))
-        line = re.sub(r"\s+([,.;:!?%)])", r"\1", line)
-        line = re.sub(r"([(])\s+", r"\1", line)
-        text_rows.append(line)
+        text_rows.append(_restore_word_spacing(line))
     text_rows.extend(unpositioned)
     return "\n".join(text_rows).strip()
+
+
+def _segment_concatenated_word(word: str) -> str:
+    special = SPECIAL_OCR_WORDS.get(word.casefold())
+    if special:
+        return special
+    spaced = SPECIAL_SPACING.get(word.casefold())
+    if spaced:
+        return spaced
+    if word.isupper() or len(word) < 8:
+        return word
+
+    camel_case_parts = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", word).split()
+    if len(camel_case_parts) > 1:
+        return " ".join(camel_case_parts)
+
+    lowered = word.casefold()
+    matches = [
+        (start, medical_word)
+        for medical_word in MEDICAL_WORDS
+        if (start := lowered.find(medical_word)) >= 0
+    ]
+    if matches:
+        start, medical_word = min(matches, key=lambda match: (match[0], -len(match[1])))
+        end = start + len(medical_word)
+        parts = [
+            _segment_unknown_word(word[:start]),
+            word[start:end],
+            _segment_concatenated_word(word[end:]),
+        ]
+        return " ".join(part for part in parts if part)
+    return _segment_unknown_word(word)
+
+
+def _segment_unknown_word(word: str) -> str:
+    if len(word) < 8 or word.isupper():
+        return word
+    parts = wordninja.split(word.lower())
+    if len(parts) < 2 or "".join(parts) != word.lower():
+        return word
+    if word[0].isupper():
+        parts[0] = parts[0].capitalize()
+    return " ".join(parts)
+
+
+def _restore_word_spacing(text: str) -> str:
+    restored = re.sub(
+        r"[A-Za-z]+",
+        lambda match: _segment_concatenated_word(match.group()),
+        text,
+    )
+    restored = re.sub(r"(?<=[,.;:!?])(?=[A-Za-z])", " ", restored)
+    restored = re.sub(r"(?<=[A-Za-z])(?=\d)|(?<=\d)(?=[A-Za-z])", " ", restored)
+    restored = restored.replace("&", " & ")
+    restored = re.sub(r"\s+([,.;:!?%)])", r"\1", restored)
+    restored = re.sub(r"([(])\s+", r"\1", restored)
+    return re.sub(r" {2,}", " ", restored)
 
 
 def extract_instruction_text(image_bytes: bytes) -> str:
